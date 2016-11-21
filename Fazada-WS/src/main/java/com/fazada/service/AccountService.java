@@ -35,6 +35,16 @@ public interface AccountService {
 	public List<Account> getAccountList();
 	
 	/**
+	 * @return List
+	 */
+	public List<Account> getAllStaff();
+	
+	/**
+	 * @return List
+	 */
+	public List<Account> getAllUser();
+	
+	/**
 	 * @param input
 	 * @param from
 	 * @param to
@@ -50,4 +60,11 @@ public interface AccountService {
 	 * @return reset password result
 	 */
 	public boolean resetPassword(Account input, String from, String to);
+	
+	/**
+	 * @param input
+	 * @param from
+	 * @return
+	 */
+	public boolean resetPasswordByEmail(String input, String from);
 }

@@ -14,11 +14,9 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,16 +38,6 @@ public class AccountController {
 	 */
 	@Autowired
 	private AccountService service;
-
-	/**
-	 * @param account
-	 * @return logic name of login page
-	 */
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String getLoginPage(@ModelAttribute("user") Account account) {
-		// Redirect to login page
-		return "login";
-	}
 
 	/**
 	 * A thread-safe method to store SimpleDateFormat
@@ -79,16 +67,14 @@ public class AccountController {
 	 * @return logic name of login page
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(ModelMap model, @RequestBody Account account, HttpSession session) {
+	public String login(@RequestBody Account account, HttpSession session) {
 		try {
 			// Log in and get account information
 			Entry<Integer, Account> result = service.checkLogin(account.getUserName(), account.getPassword());
 			switch (result.getKey()) {
 			case 0: {
-				// Put error message to login page
-				model.put("errorMessage", "Invalid username or password");
 				// Redirect to login page
-				return "login";
+				return "Invalid username or password";
 			}
 			case 1: {
 				Account info = result.getValue();
@@ -106,37 +92,20 @@ public class AccountController {
 				// }
 			}
 			case 2: {
-				// Put inactive account message to login page
-				model.put("errorMessage",
-						"Your account is currently inactive. Please contact support for more information.");
 				// Redirect to login page
-				return "inactive";
+				return "Your account is currently inactive. Please contact support for more information.";
 			}
 			default: {
-				// Put error message to login page
-				model.put("errorMessage", "Unknown error has occurred.");
 				// Log Hibernate error message
 				logger.error("Unknown return code has returned" + result.getKey());
 				break;
 			}
 			}
 		} catch (HibernateException e) {
-			// Put error message to login page
-			model.put("errorMessage", "Error occurred in processing request!");
 			// Log Hibernate error message
 			logger.error("Error in processing request in DB :" + e.getMessage());
 		}
 		return "invalid";
-	}
-
-	/**
-	 * @param account
-	 * @return logic name of home page
-	 */
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public String getHomePage(@ModelAttribute("user") Account account) {
-		// Redirect to home page
-		return "home";
 	}
 
 	/**
@@ -174,18 +143,8 @@ public class AccountController {
 		return "home";
 	}
 
-	/**
-	 * @param account
-	 * @return logic name of home page
-	 */
-	@RequestMapping(value = "/manager", method = RequestMethod.GET)
-	public String getManagerPage(ModelMap model, @RequestBody Account account) {
-		// Redirect to home page
-		return "manager";
-	}
-
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=*/*", produces = "application/json")
-	public @ResponseBody String loadAccountList() throws JsonProcessingException {
+	public String loadAccountList() throws JsonProcessingException {
 		// Get list
 		List<Account> list = service.getAccountList();
 		// Convert list into JSON type
@@ -194,7 +153,7 @@ public class AccountController {
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public @ResponseBody String addAccount(@RequestBody Account account) {
+	public String addAccount(@RequestBody Account account) {
 		try {
 			// Add account and get result
 			boolean result = service.addNewAccount(account, "minhhuan@test.com", account.getEmail(), 9);
@@ -219,7 +178,7 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
-	public @ResponseBody String editAccount(@RequestBody Account account) {
+	public String editAccount(@RequestBody Account account) {
 		try {
 			// Update account and get result
 			boolean result = service.updateAccountInfo(account);
@@ -244,7 +203,7 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping(value = "/reset", method = RequestMethod.PUT)
-	public @ResponseBody String resetPassword(@RequestBody Account account) {
+	public String resetPassword(@RequestBody Account account) {
 		try {
 			// Reset password and get result
 			boolean result = service.resetPassword(account, "minhhuan@test.com", account.getEmail());
@@ -262,18 +221,6 @@ public class AccountController {
 		}
 		// Return message
 		return "Error occurred in DB processing";
-	}
-
-	/**
-	 * @param session
-	 * @return redirection to login page
-	 */
-	@RequestMapping("/logout")
-	public String logout(HttpSession session) {
-		// Remove current session from the registry
-		session.invalidate();
-		// Redirect to login page
-		return "redirect:/login.htm";
 	}
 
 }

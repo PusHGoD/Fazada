@@ -84,7 +84,6 @@ public class Account implements java.io.Serializable {
 	}
 
 	@Column(name = "password", nullable = false, length = 50)
-	@JsonIgnore
 	public String getPassword() {
 		return this.password;
 	}
@@ -149,7 +148,7 @@ public class Account implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "account")
-	@JsonBackReference
+	@JsonManagedReference(value="account-order")
 	public Set<Order> getOrders() {
 		return this.orders;
 	}

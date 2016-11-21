@@ -68,7 +68,7 @@ public class Order implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userID", nullable = false)
-	@JsonManagedReference
+	@JsonBackReference(value="account-order")
 	public Account getAccount() {
 		return this.account;
 	}
@@ -106,7 +106,7 @@ public class Order implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
-	@JsonManagedReference
+	@JsonManagedReference(value="order-orderdetails")
 	@Fetch(FetchMode.SELECT)
 	public Set<Orderdetail> getOrderdetails() {
 		return this.orderdetails;

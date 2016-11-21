@@ -32,7 +32,42 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 		criteria.add(Restrictions.eq("password", password));
 		// Get result
 		Account account = (Account) criteria.uniqueResult();
-		// Return null if none of above conditions are met
+		return account;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fazada.dao.AccountDAO#findByEmailAndPassword(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public Account findByEmailAndPassword(String email, String password) {
+		// Get current session
+		Session session = sessionFactory.getCurrentSession();
+		// Query with criteria object
+		Criteria criteria = session.createCriteria(Account.class);
+		criteria.add(Restrictions.eq("email", email));
+		criteria.add(Restrictions.eq("password", password));
+		// Get result
+		Account account = (Account) criteria.uniqueResult();
+		return account;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fazada.dao.AccountDAO#findByEmail(java.lang.String)
+	 */
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public Account findByEmail(String email) {
+		// Get current session
+		Session session = sessionFactory.getCurrentSession();
+		// Query with criteria object
+		Criteria criteria = session.createCriteria(Account.class);
+		criteria.add(Restrictions.eq("email", email));
+		// Get result
+		Account account = (Account) criteria.uniqueResult();
 		return account;
 	}
 
@@ -64,6 +99,36 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 		return this.find();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.fazada.dao.AccountDAO#findAllStaff()
+	 */
+	@Override
+	public List<Account> findAllStaff() {
+		// Get current session
+		Session session = sessionFactory.getCurrentSession();
+		// Query with criteria object
+		Criteria criteria = session.createCriteria(Account.class);
+		criteria.add(Restrictions.eq("role", "staff"));
+		// Get result
+		List<Account> list = criteria.list();
+		return list;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.fazada.dao.AccountDAO#findAllUser()
+	 */
+	@Override
+	public List<Account> findAllUser() {
+		// Get current session
+		Session session = sessionFactory.getCurrentSession();
+		// Query with criteria object
+		Criteria criteria = session.createCriteria(Account.class);
+		criteria.add(Restrictions.eq("role", "user"));
+		// Get result
+		List<Account> list = criteria.list();
+		return list;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -77,12 +142,28 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 			return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.fazada.dao.AccountDAO#updatePassword(com.fazada.model.Account, java.lang.String)
+	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean updatePassword(Account account, String password) {
 		if (account != null && password != null) {
 			Account hiddenInfo = this.findById(account.getId());
 			hiddenInfo.setPassword(password);
 			return this.update(hiddenInfo);
+		} else
+			return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.fazada.dao.AccountDAO#updatePasswordByEmail(java.lang.String, java.lang.String)
+	 */
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public boolean updatePasswordByEmail(String email, String password) {
+		if (email != null && password != null) {
+			Account account = this.findByEmail(email);
+			account.setPassword(password);
+			return this.update(account);
 		} else
 			return false;
 	}

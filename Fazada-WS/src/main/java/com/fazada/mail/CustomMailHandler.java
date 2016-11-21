@@ -13,8 +13,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 /**
- * @author HuanPM
- * Custom mail handler for local email
+ * @author HuanPM Custom mail handler for local email
  */
 public class CustomMailHandler {
 
@@ -53,10 +52,12 @@ public class CustomMailHandler {
 				message.setSubject("Registeration");
 
 				// Create the message part
-				BodyPart messageBodyPart = new MimeBodyPart();
+				MimeBodyPart messageBodyPart = new MimeBodyPart();
 
 				// Fill the message
-				messageBodyPart.setText("Your username is: " + username + "\n" + "Your password is: " + password);
+				messageBodyPart.setText("You has registered your account on [link].<br/>Your username is: " + username
+						+ "<br/>" + "Your password is: " + password
+						+ "<br/>Please click this link to activate your account:<br/>", "UTF-8", "html");
 
 				// Create a multipar message
 				Multipart multipart = new MimeMultipart();
@@ -106,13 +107,16 @@ public class CustomMailHandler {
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
 				// Set Subject: header field
-				message.setSubject("New Password");
+				message.setSubject("Reset Password");
 
 				// Create the message part
-				BodyPart messageBodyPart = new MimeBodyPart();
+				MimeBodyPart messageBodyPart = new MimeBodyPart();
 
 				// Fill the message
-				messageBodyPart.setText("Your new password is: " + password);
+				messageBodyPart.setText(
+						"Your account has been resetted.<br/>The new password is: " + password
+								+ ".<br/>Please click <a href='#'>this</a> to login to our site and change password.",
+						"UTF-8", "html");
 
 				// Create a multipar message
 				Multipart multipart = new MimeMultipart();

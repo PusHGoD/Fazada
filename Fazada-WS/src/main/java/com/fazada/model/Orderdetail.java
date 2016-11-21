@@ -49,7 +49,7 @@ public class Orderdetail implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "orderID", nullable = false, insertable = false, updatable = false)
-	@JsonBackReference
+	@JsonBackReference(value="order-orderdetails")
 	public Order getOrder() {
 		return this.order;
 	}
@@ -60,7 +60,7 @@ public class Orderdetail implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "productID", nullable = false, insertable = false, updatable = false)
-	@JsonBackReference
+	@JsonBackReference(value="orderdetails-product")
 	public Product getProduct() {
 		return this.product;
 	}

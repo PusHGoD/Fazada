@@ -95,7 +95,7 @@ public class Product implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
-	@JsonManagedReference
+	@JsonManagedReference(value="orderdetails-product")
 	public Set<Orderdetail> getOrderdetails() {
 		return this.orderdetails;
 	}

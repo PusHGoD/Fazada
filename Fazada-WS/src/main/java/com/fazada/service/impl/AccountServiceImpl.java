@@ -23,7 +23,7 @@ import com.fazada.service.AccountService;
  */
 @Service("/accountservice")
 @Component
-public class AccountServiceImpl implements AccountService{
+public class AccountServiceImpl implements AccountService {
 
 	/**
 	 * Autowired account DAO
@@ -32,6 +32,40 @@ public class AccountServiceImpl implements AccountService{
 	private AccountDAO dao;
 
 	private CustomMailHandler mail = new CustomMailHandler();
+
+	/**
+	 * @param size
+	 * @return randomized password
+	 */
+	public String randomPassword(int size) {
+		Random random = new Random();
+		String pass = "";
+		String randomValue = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+		for (int i = 0; i < size; i++) {
+			int randomNum = random.nextInt(randomValue.length());
+			pass += randomValue.charAt(randomNum);
+		}
+		return pass;
+	}
+
+	/**
+	 * @param input
+	 * @return MD5 encrypted string (32 characters)
+	 */
+	public String encryptMD5(String input) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] messageDigest = md.digest(input.getBytes());
+			BigInteger number = new BigInteger(1, messageDigest);
+			String hashtext = number.toString(16);
+			while (hashtext.length() < 32) {
+				hashtext = "0" + hashtext;
+			}
+			return hashtext;
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -82,38 +116,24 @@ public class AccountServiceImpl implements AccountService{
 		return dao.findAll();
 	}
 
-	/**
-	 * @param size
-	 * @return randomized password
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fazada.service.AccountService#getAllStaff()
 	 */
-	public String randomPassword(int size) {
-		Random random = new Random();
-		String pass = "";
-		String randomValue = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-		for (int i = 0; i < size; i++) {
-			int randomNum = random.nextInt(randomValue.length());
-			pass += randomValue.charAt(randomNum);
-		}
-		return pass;
+	@Override
+	public List<Account> getAllStaff() {
+		return dao.findAllStaff();
 	}
 
-	/**
-	 * @param input
-	 * @return MD5 encrypted string (32 characters)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fazada.service.AccountService#getAllUser()
 	 */
-	public String encryptMD5(String input) {
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] messageDigest = md.digest(input.getBytes());
-			BigInteger number = new BigInteger(1, messageDigest);
-			String hashtext = number.toString(16);
-			while (hashtext.length() < 32) {
-				hashtext = "0" + hashtext;
-			}
-			return hashtext;
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
+	@Override
+	public List<Account> getAllUser() {
+		return dao.findAllUser();
 	}
 
 	/*
@@ -144,6 +164,18 @@ public class AccountServiceImpl implements AccountService{
 			String password = randomPassword(9);
 			mail.sendResetMail(from, to, password);
 			return dao.updatePassword(input, encryptMD5(password));
+		}
+		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.fazada.service.AccountService#resetPasswordByEmail(java.lang.String, java.lang.String)
+	 */
+	public boolean resetPasswordByEmail(String input, String from){
+		if (input != null && from != null) {
+			String password = randomPassword(9);
+			mail.sendResetMail(from, input, password);
+			return dao.updatePasswordByEmail(input, encryptMD5(password));
 		}
 		return false;
 	}

@@ -17,6 +17,20 @@ public interface AccountDAO {
 	public Account findByUserNameAndPassword(String username, String password);
 
 	/**
+	 * @param username
+	 * @param password
+	 * @return account information
+	 */
+	public Account findByEmailAndPassword(String username, String password);
+
+	/**
+	 * @param username
+	 * @param password
+	 * @return account information
+	 */
+	public Account findByEmail(String email);
+
+	/**
 	 * @param account
 	 * @return update result (true/false)
 	 */
@@ -26,6 +40,16 @@ public interface AccountDAO {
 	 * @return list
 	 */
 	public List<Account> findAll();
+
+	/**
+	 * @return list
+	 */
+	public List<Account> findAllStaff();
+
+	/**
+	 * @return list
+	 */
+	public List<Account> findAllUser();
 
 	/**
 	 * @param account
@@ -38,5 +62,11 @@ public interface AccountDAO {
 	 * @return update result
 	 */
 	public boolean updatePassword(Account account, String password);
-	
+
+	/**
+	 * @param account
+	 * @param password
+	 * @return update result
+	 */
+	public boolean updatePasswordByEmail(String email, String password);
 }
