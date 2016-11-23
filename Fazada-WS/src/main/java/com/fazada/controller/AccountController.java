@@ -202,15 +202,15 @@ public class AccountController {
 	 * @param account
 	 * @return
 	 */
-	@RequestMapping(value = "/reset", method = RequestMethod.PUT)
-	public String resetPassword(@RequestBody Account account) {
+	@RequestMapping(value = "/reset", method = RequestMethod.POST)
+	public String resetPassword(@RequestBody String email) {
 		try {
 			// Reset password and get result
-			boolean result = service.resetPassword(account, "minhhuan@test.com", account.getEmail());
+			boolean result = service.resetPasswordByEmail(email, "minhhuan@test.com");
 			// Check if update operation is successful
 			if (result) {
 				// Return message
-				return "You have resetted password of " + account.getUserName() + "!";
+				return "You have resetted password!";
 			} else {
 				// Return message
 				return "Error in resetting password!";

@@ -55,9 +55,11 @@ public class CustomMailHandler {
 				MimeBodyPart messageBodyPart = new MimeBodyPart();
 
 				// Fill the message
-				messageBodyPart.setText("You has registered your account on [link].<br/>Your username is: " + username
-						+ "<br/>" + "Your password is: " + password
-						+ "<br/>Please click this link to activate your account:<br/>", "UTF-8", "html");
+				messageBodyPart.setText(
+						"You has registered your account on [link].<br/>Your username is: " + username + "<br/>"
+								+ "Your password is: " + password
+								+ "<br/>Please click this link to activate your account:<br/> http://localhost:8080/fazada/main",
+						"UTF-8", "html");
 
 				// Create a multipar message
 				Multipart multipart = new MimeMultipart();
@@ -115,7 +117,7 @@ public class CustomMailHandler {
 				// Fill the message
 				messageBodyPart.setText(
 						"Your account has been resetted.<br/>The new password is: " + password
-								+ ".<br/>Please click <a href='#'>this</a> to login to our site and change password.",
+								+ ".<br/>Please click <a href='http://localhost:8080/fazada/main'>this</a> to login to our site and change password.",
 						"UTF-8", "html");
 
 				// Create a multipar message
