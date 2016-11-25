@@ -72,7 +72,6 @@ public class Order implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userID", nullable = false)
-	@JsonIgnore
 	public Account getAccount() {
 		return this.account;
 	}

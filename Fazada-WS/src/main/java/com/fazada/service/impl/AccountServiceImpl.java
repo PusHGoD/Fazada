@@ -167,11 +167,15 @@ public class AccountServiceImpl implements AccountService {
 		}
 		return false;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.fazada.service.AccountService#resetPasswordByEmail(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.fazada.service.AccountService#resetPasswordByEmail(java.lang.String,
+	 * java.lang.String)
 	 */
-	public boolean resetPasswordByEmail(String input, String from){
+	public boolean resetPasswordByEmail(String input, String from) {
 		if (input != null && from != null) {
 			String password = randomPassword(9);
 			mail.sendResetMail(from, input, password);

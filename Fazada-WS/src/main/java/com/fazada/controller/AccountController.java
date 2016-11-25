@@ -3,6 +3,7 @@ package com.fazada.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpSession;
@@ -40,34 +41,13 @@ public class AccountController {
 	private AccountService service;
 
 	/**
-	 * A thread-safe method to store SimpleDateFormat
-	 */
-	private static final ThreadLocal<SimpleDateFormat> tl = new ThreadLocal<SimpleDateFormat>() {
-		@Override
-		protected SimpleDateFormat initialValue() {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			return sdf;
-		}
-	};
-
-	/**
-	 * register property editors
-	 */
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat sdf = tl.get();
-		sdf.setLenient(true);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-	}
-
-	/**
 	 * @param model
 	 * @param account
 	 * @param session
 	 * @return logic name of login page
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(@RequestBody Account account, HttpSession session) {
+	public String login(@RequestBody Account account) {
 		try {
 			// Log in and get account information
 			Entry<Integer, Account> result = service.checkLogin(account.getUserName(), account.getPassword());
@@ -78,8 +58,6 @@ public class AccountController {
 			}
 			case 1: {
 				Account info = result.getValue();
-				// Set session attribute to account information
-				session.setAttribute("accountInfo", info);
 				return info.getRole();
 				// switch (info.getRole().toLowerCase()) {
 				// case "admin":
@@ -173,6 +151,27 @@ public class AccountController {
 		return "Error occurred in DB processing";
 	}
 
+	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	public String signupAccount(@RequestBody Account account) {
+		try {
+			// Add account and get result
+			boolean result = service.addNewAccount(account, "minhhuan@test.com", account.getEmail(), 9);
+			// Check if the operation is successful
+			if (result) {
+				// Return message
+				return "You have successfully registered! Please check your email!";
+			} else {
+				// Return message
+				return "Error in adding user!";
+			}
+		} catch (HibernateException e) {
+			// Log Hibernate error message
+			logger.error("Error in processing request in DB :" + e.getMessage());
+		}
+		// Return message
+		return "Error occurred in DB processing";
+	}
+	
 	/**
 	 * @param account
 	 * @return
