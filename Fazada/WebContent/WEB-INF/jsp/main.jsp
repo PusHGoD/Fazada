@@ -35,8 +35,31 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top"
 			id="sidebar-wrapper" role="navigation">
 		<ul class="nav sidebar-nav">
-			<li><a href="#" style="font-size: 16px" data-toggle="modal"
-				data-target="#myModal">Đăng nhập / Đăng ký</a></li>
+			<c:if test="${empty accountInfo}">
+				<li><a href="#" style="font-size: 16px" data-toggle="modal"
+					data-target="#myModal">Đăng nhập / Đăng ký</a></li>
+			</c:if>
+			<c:if test="${not empty accountInfo}">
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" style="font-size: 18px"><img
+						src="<c:url value='/Resources/pic/'/>user.png" height="30px"
+						width="30px" /><span> ${accountInfo}</span><span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li class="dropdown-header"></li>
+						<c:if test="${role eq 'admin'}">
+							<li><a href="manager"><small>Quản lý danh sách
+										tài khoản</small></a></li>
+						</c:if>
+						<c:if test="${role eq 'staff'}">
+							<li><a href="order"><small>Quản lý đơn hàng</small></a></li>
+						</c:if>
+						<c:if test="${role eq 'user'}">
+							<li><a href="account/info"><small>Quản lý tài khoản</small></a></li>
+							<li><a href="account/order"><small>Đơn hàng của tôi</small></a></li>
+						</c:if>
+						<li><a href="logout"><small>Đăng xuất</small></a></li>
+					</ul></li>
+			</c:if>
 			<li>
 				<form class="navbar-form navbar-left">
 					<div class="form-group">
@@ -192,11 +215,11 @@
 						<li class="active"><a data-toggle="tab" href="#login">Login</a></li>
 						<li><a data-toggle="tab" href="#signup">Sign up</a></li>
 					</ul>
+					<div id="ajaxMessage"></div>
 					<!-- User name -->
 					<div class="tab-content">
 						<div id="login" class="tab-pane fade in active">
-							<form id="loginForm"
-								action="http://localhost:8080/fazadaws/login" method="POST">
+							<form id="loginForm" action="login" method="POST">
 								<!-- User name -->
 								<div class="form-group">
 									Username: <input type="text" class="form-control"
@@ -218,7 +241,7 @@
 							</form>
 						</div>
 						<div id="signup" class="tab-pane fade">
-							<form id="signupForm" action="add.htm">
+							<form id="signupForm" action="signup">
 								<!-- User name -->
 								<div class="form-group">
 									User name: <input type="text" class="form-control" value=""

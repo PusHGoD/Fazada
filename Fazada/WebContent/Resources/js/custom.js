@@ -1,65 +1,6 @@
 $(document)
 		.ready(
 				function() {
-					if ($('body').is('#managerPage')) {
-						$(load);
-					}
-
-					$("#login-btn")
-							.click(
-									function() {
-										if (checkLoginInput()) {
-											var data = $("#loginForm")
-													.serializeArray();
-											var json = convertArrayToJSON(data);
-											$
-													.ajax({
-														url : "http://localhost:8080/fazadaws/account/login",
-														type : "POST",
-														contentType : "application/json; charset=utf-8",
-														dataType : "text",
-														data : JSON
-																.stringify(json),
-														success : function(
-																response) {
-															showAJAXSuccessMessage(response);
-														},
-														error : function(
-																response) {
-															showAJAXErrorMessage(response);
-														}
-													});
-										}
-									});
-
-					$("#forget-btn")
-							.click(
-									function() {
-										var data = $("#forgetForm").find(
-												"#email").val();
-										$
-												.ajax({
-													url : "http://localhost:8080/fazadaws/account/reset",
-													type : "POST",
-													contentType : "text/plain; charset=utf-8",
-													dataType : "text",
-													data : data,
-													success : function(response) {
-														alert(response);
-														showAJAXSuccessMessage(response);
-													},
-													error : function(response) {
-														showAJAXErrorMessage(response);
-													}
-												});
-									})
-
-					$("#user-update-btn").click(function() {
-						if (checkUpdateInput()) {
-							$("#editForm").submit();
-						}
-					});
-
 					var trigger = $('.hamburger'), overlay = $('.overlay'), isClosed = false;
 
 					trigger.click(function() {
@@ -81,9 +22,120 @@ $(document)
 						}
 					}
 
+					if ($('body').is('#user-management-page')) {
+						$(loadUser);
+					}
+					if ($('body').is('#order-management-page')) {
+						$(loadOrder);
+						var currentYear = new Date().getFullYear();
+						$('#order-select').append($('<option>', {
+							value : currentYear,
+							text : 'In ' + currentYear
+						}));
+					}
+
 					$('[data-toggle="offcanvas"]').click(function() {
 						$('#wrapper').toggleClass('toggled');
 					});
+
+					$("#order-select")
+							.change(
+									function() {
+										var today = new Date();
+										var priorDate = new Date();
+										switch ($("#order-select").val()) {
+										case "All":
+											loadOrder();
+											break;
+										case "In 15 days": {
+											priorDate
+													.setDate(today.getDate() - 15);
+											loadOrderWithRange(priorDate, today);
+											break;
+										}
+										case "In 30 days": {
+											priorDate
+													.setDate(today.getDate() - 30);
+											loadOrderWithRange(priorDate, today);
+											break;
+										}
+										case "In 3 months": {
+											priorDate
+													.setMonth(today.getMonth() - 3);
+											loadOrderWithRange(priorDate, today);
+											break;
+										}
+										case "In 6 months": {
+											priorDate
+													.setMonth(today.getMonth() - 6);
+											loadOrderWithRange(priorDate, today);
+											break;
+										}
+										default: {
+											if (/^\d+$/.test($("#order-select")
+													.val())) {
+												priorDate = new Date($(
+														"#order-select").val(),
+														0, 2);
+												loadOrderWithRange(priorDate,
+														today);
+											}
+											break;
+										}
+										}
+									});
+
+					$("#login-btn")
+							.click(
+									function() {
+										if (checkLoginInput()) {
+											var data = $("#loginForm")
+													.serializeArray();
+											var json = convertArrayToJSON(data);
+											$
+													.ajax({
+														url : "/fazadaws/account/login",
+														type : "POST",
+														contentType : "application/json; charset=utf-8",
+														dataType : "text",
+														data : JSON
+																.stringify(json),
+														success : function(
+																response) {
+															switch (response) {
+															case "admin":
+															case "user":
+															case "staff": {
+																var input = $(
+																		"<input>")
+																		.attr(
+																				"type",
+																				"hidden")
+																		.attr(
+																				"name",
+																				"role")
+																		.val(
+																				response);
+																$('#loginForm')
+																		.append(
+																				$(input));
+																$("#loginForm")
+																		.submit();
+																break;
+															}
+															default: {
+																showAJAXErrorMessage(response);
+																break;
+															}
+															}
+														},
+														error : function(
+																response) {
+															showAJAXErrorMessage(response);
+														}
+													});
+										}
+									});
 
 					$("#signup-btn")
 							.click(
@@ -94,7 +146,7 @@ $(document)
 											var json = convertArrayToJSON(data);
 											$
 													.ajax({
-														url : 'http://localhost:8080/fazadaws/account/add',
+														url : 'http://localhost:8080/fazadaws/account/signup',
 														type : "POST",
 														contentType : "application/json; charset=utf-8",
 														dataType : "text",
@@ -102,7 +154,6 @@ $(document)
 																.stringify(json),
 														success : function(
 																response) {
-															alert(response);
 															showAJAXSuccessMessage(response);
 														},
 														error : function(
@@ -112,136 +163,38 @@ $(document)
 															showAJAXErrorMessage(response);
 														}
 													});
-											$("#myModal").modal("hide");
 										}
 									});
-					// $("#manager-add-btn")
-					// .click(
-					// function() {
-					// if (checkManagementInput($("#addModal"))) {
-					// var data = $("#addModal").find(
-					// "#addForm")
-					// .serializeArray();
-					// var json = {};
-					// $
-					// .each(
-					// data,
-					// function(v) {
-					// if (this.value != null) {
-					// v = this.value;
-					// } else {
-					// v = '';
-					// }
-					// if (this.name == "dateOfBirth") {
-					// v = parseDate(
-					// v,
-					// "dd/mm/yyyy");
-					// }
-					// if (json[this.name] != null) {
-					// if (!json[this.name].push) {
-					// json[this.name] = [ json[this.name] ];
-					// }
-					// json[this.name]
-					// .push(v);
-					// } else {
-					// json[this.name] = v;
-					// }
-					// });
-					// $
-					// .ajax({
-					// url : 'add.htm',
-					// type : "POST",
-					// contentType : "application/json; charset=utf-8",
-					// dataType : "text",
-					// data : JSON
-					// .stringify(json),
-					// success : function(
-					// response) {
-					// load();
-					// showAJAXSuccessMessage(response);
-					// },
-					// error : function(
-					// response) {
-					// showAJAXErrorMessage(response);
-					// }
-					// });
-					// $("#addModal").modal("hide");
-					// }
-					// });
-					//
-					// $("#manager-edit-btn")
-					// .click(
-					// function() {
-					// if (checkManagementInput($("#editModal"))) {
-					// var data = $("#editModal").find(
-					// "#editForm")
-					// .serializeArray();
-					// var json = {};
-					// $
-					// .each(
-					// data,
-					// function(v) {
-					// if (this.value != null) {
-					// v = this.value;
-					// } else {
-					// v = '';
-					// }
-					// if (this.name == "dateOfBirth") {
-					// v = parseDate(
-					// v,
-					// "dd/mm/yyyy");
-					// }
-					// if (json[this.name] != null) {
-					// if (!json[this.name].push) {
-					// json[this.name] = [ json[this.name] ];
-					// }
-					// json[this.name]
-					// .push(v);
-					// } else {
-					// json[this.name] = v;
-					// }
-					// });
-					// $
-					// .ajax({
-					// url : 'edit.htm',
-					// type : "POST",
-					// contentType : "application/json; charset=utf-8",
-					// dataType : "text",
-					// data : JSON
-					// .stringify(json),
-					// success : function(
-					// response) {
-					// load();
-					// showAJAXSuccessMessage(response);
-					// },
-					// error : function(
-					// response) {
-					// showAJAXErrorMessage(response);
-					// }
-					//
-					// });
-					// $("#editModal").modal("hide");
-					// }
-					// });
+
+					$("#forget-btn")
+							.click(
+									function() {
+										var data = $("#forgetForm").find(
+												"#email").val();
+										$
+												.ajax({
+													url : "http://localhost:8080/fazadaws/account/reset",
+													type : "POST",
+													contentType : "text/plain; charset=utf-8",
+													dataType : "text",
+													data : data,
+													success : function(response) {
+														showAJAXSuccessMessage(response);
+													},
+													error : function(response) {
+														showAJAXErrorMessage(response);
+													}
+												});
+									})
+
+					$("#user-update-btn").click(function() {
+						if (checkUpdateInput()) {
+							$("#editForm").submit();
+						}
+					});
 
 					window.actionEvents = {
-						// 'click .reset' : function(e, value, row, index) {
-						// $
-						// .ajax({
-						// url : 'reset.htm',
-						// type : "POST",
-						// contentType : "application/json; charset=utf-8",
-						// dataType : "text",
-						// data : JSON.stringify(row),
-						// success : function(response) {
-						// showAJAXSuccessMessage(response);
-						// },
-						// error : function(response) {
-						// showAJAXErrorMessage(response);
-						// }
-						// });
-						// },
-						'click .reset' : function(e, value, row, index) {
+						'click .edit' : function(e, value, row, index) {
 							if (row != null) {
 								$("#editModal").find("#id").val(row.id);
 								$("#editModal").find("#userName").val(
@@ -319,8 +272,8 @@ function convertArrayToJSON(data) {
 	return json;
 }
 
-/* Load table */
-function load() {
+/* Load user table */
+function loadUser() {
 	$.ajax({
 		url : '/fazadaws/account/list',
 		type : "GET",
@@ -343,6 +296,54 @@ function load() {
 	});
 }
 
+/* Load order table */
+function loadOrder() {
+	$.ajax({
+		url : '/fazadaws/order/list',
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		dataType : "json",
+		success : function(list) {
+			$('#table').bootstrapTable("destroy");
+			$('#table').bootstrapTable({
+				data : list
+			});
+			$('#table').on('click-row.bs.table', function(e, row, $element) {
+				$('.success').removeClass('success');
+				$($element).addClass('success');
+			});
+			$('#items').text(list.length);
+		},
+		error : function() {
+			showAJAXErrorMessage('Error in loading data');
+		}
+	});
+}
+
+function loadOrderWithRange(priorDate, today) {
+	$.ajax({
+		url : '/fazadaws/order/list/time/'
+				+ priorDate.toISOString().slice(0, 10) + ","
+				+ today.toISOString().slice(0, 10),
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		success : function(list) {
+			$('#table').bootstrapTable("destroy");
+			$('#table').bootstrapTable({
+				data : list
+			});
+			$('#table').on('click-row.bs.table', function(e, row, $element) {
+				$('.success').removeClass('success');
+				$($element).addClass('success');
+			});
+			$('#items').text(list.length);
+		},
+		error : function() {
+			showAJAXErrorMessage('Error in loading data');
+		}
+	});
+}
+
 /* Get selected row */
 function getSelectedRow() {
 	var index = $("#table").find('tr.success').data('index');
@@ -350,15 +351,19 @@ function getSelectedRow() {
 }
 
 function showAJAXSuccessMessage(response) {
-	$("#ajaxMessage").html(
-			"<div class='alert alert-success'>" + response + "</div>");
+	$("#ajaxMessage").removeClass();
+	$("#ajaxMessage").addClass("alert");
+	$("#ajaxMessage").addClass("alert-success");
+	$("#ajaxMessage").html(response);
 	$("#ajaxMessage").fadeIn();
 	$("#ajaxMessage").fadeOut(2500);
 }
 
 function showAJAXErrorMessage(response) {
-	$("#ajaxMessage").html(
-			"<div class='alert alert-danger'>" + response + "</div>");
+	$("#ajaxMessage").removeClass();
+	$("#ajaxMessage").addClass("alert");
+	$("#ajaxMessage").addClass("alert-danger");
+	$("#ajaxMessage").html(response);
 	$("#ajaxMessage").fadeIn();
 	$("#ajaxMessage").fadeOut(2500);
 }
@@ -386,12 +391,31 @@ function activeFormatter(value, row, index) {
 	}
 }
 
+function priceFormatter(value, row, index) {
+	return "$" + value;
+}
+
+function statusFormatter(value, row, index) {
+	switch (value) {
+	case -1:
+		return "Cancelled";
+	case 0:
+		return "Processing";
+	case 1:
+		return "Shipping";
+	case 2:
+		return "Shipped";
+	default:
+		return "Invalid status";
+	}
+}
+
 function actionFormatter(value, row, index) {
 	return [
 			'<a class="edit ml10" href="javascript:void(0)" title="Edit" data-toggle="modal" data-target="#editModal">',
 			'<i class="glyphicon glyphicon-edit"></i>', '</a> ', ].join('');
-//	'<a class="reset ml10" href="javascript:void(0)" title="Reset">',
-//	'<i class="glyphicon glyphicon-refresh"></i>', '</a> ', 
+	// '<a class="reset ml10" href="javascript:void(0)" title="Reset">',
+	// '<i class="glyphicon glyphicon-refresh"></i>', '</a> ',
 }
 
 /* Date operations */

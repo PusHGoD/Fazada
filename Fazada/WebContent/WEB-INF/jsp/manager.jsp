@@ -2,7 +2,6 @@
 	pageEncoding="utf-8"%>
 <%@ page isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -16,8 +15,6 @@
 <!-- Optional theme -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
-
-<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -32,18 +29,6 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.css" />
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.js"></script>
-
-<!-- <link rel="stylesheet" -->
-<!-- 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/filter/bootstrap-table-filter.js" /> -->
-<!-- <script -->
-<!-- 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/filter-control/bootstrap-table-filter-control.js"></script>	 -->
-<!-- <link -->
-<!-- 	href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" -->
-<!-- 	rel="stylesheet" /> -->
-<!-- <script -->
-<!-- 	src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script> -->
-<!-- <script -->
-<!-- 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/editable/bootstrap-table-editable.js"></script> -->
 <link href="<c:url value='/Resources/css/main.css' />" rel="stylesheet" />
 <link
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
@@ -51,9 +36,9 @@
 <!-- Custom javascript file (mostly validation) -->
 <script type="text/javascript"
 	src='<c:url value="/Resources/js/custom.js"/>'></script>
-<title>Manager Page</title>
+<title>User Management</title>
 </head>
-<body id="managerPage">
+<body id="user-management-page">
 	<div>
 		<a href="main"><img
 			src="<c:url value='/Resources/pic/'/>FazadaGroupLogo.jpg"
@@ -65,15 +50,23 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top"
 			id="sidebar-wrapper" role="navigation">
 		<ul class="nav sidebar-nav">
-			<li class="dropdown"><a href="#" class="dropdown-toggle"
-				data-toggle="dropdown" style="font-size: 18px"><img
-					src="<c:url value='/Resources/pic/'/>user.png" height="30px"
-					width="30px" />QuangNND <span class="caret"></span></a>
-				<ul class="dropdown-menu" role="menu">
-					<li class="dropdown-header"></li>
-					<li><a href="#">Quản lý tài khoản</a></li>
-					<li><a href="#">Đơn hàng của tôi</a></li>
-				</ul></li>
+			<c:if test="${empty accountInfo or empty role or role ne 'admin'}">
+				<c:redirect url="main"></c:redirect>
+			</c:if>
+			<c:if test="${not empty accountInfo}">
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" style="font-size: 18px"><img
+						src="<c:url value='/Resources/pic/'/>user.png" height="30px"
+						width="30px" /><span> ${accountInfo}</span><span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li class="dropdown-header"></li>
+						<c:if test="${role eq 'admin'}">
+							<li><a href="#"><small>Quản lý danh sách tài
+										khoản</small></a></li>
+						</c:if>
+						<li><a href="logout"><small>Đăng xuất</small></a></li>
+					</ul></li>
+			</c:if>
 			<li>
 				<form class="navbar-form navbar-left">
 					<div class="form-group">
@@ -83,7 +76,6 @@
 					</div>
 				</form>
 			</li>
-
 			<li><a href="#"><img
 					src="<c:url value='/Resources/pic/'/>icon.png" height="30px"
 					width="30px" /></a></li>
@@ -134,8 +126,6 @@
 					<li><a href="#">Bóng bầu dục</a></li>
 					<li><a href="#">Bóng bàn</a></li>
 				</ul></li>
-			<li class="sidebar-brand"><a href="logout">Log out</a></li>
-			</li>
 		</ul>
 
 		</nav>
@@ -178,8 +168,7 @@
 				</div>
 				<!-- JSON auto-generated table -->
 				<table id="table" class="table" data-method="POST"
-					data-show-toggle="true" data-toolbar="#toolbar"
-					data-content-type="application/json">
+					data-show-toggle="true" data-toolbar="#toolbar" data-search="true">
 					<thead>
 						<tr>
 							<th data-field="id">ID</th>
@@ -292,13 +281,7 @@
 					</div>
 					<!-- Modal body -->
 					<div class="modal-body">
-						<input type="hidden" id="id" name="id"/>
-						<!-- User name -->
-						<div class="form-group">
-							User name: <input id="userName" name="userName" type="text"
-								class="form-control" value="" placeholder="User name" />
-							<div id="username_error" class="text-danger"></div>
-						</div>
+						<input type="hidden" id="id" name="id" />
 						<!-- First name -->
 						<div class="form-group">
 							First name: <input id="firstName" name="firstName" type="text"
@@ -315,15 +298,15 @@
 						<div class="form-group">
 							Date of birth:
 							<!-- Date picker -->
-							<input id="dateOfBirth" name="dateOfBirth" type="text" data-provide="datepicker"
-								class="form-control" data-date-format="dd/mm/yyyy" value=""
-								placeholder="dd/mm/yyyy" />
+							<input id="dateOfBirth" name="dateOfBirth" type="text"
+								data-provide="datepicker" class="form-control"
+								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy" />
 							<div id="dob_error" class="text-danger"></div>
 						</div>
 						<!-- Email -->
 						<div class="form-group">
-							Email: <input id="email" name="email" type="text" class="form-control"
-								value="" placeholder="Email" />
+							Email: <input id="email" name="email" type="text"
+								class="form-control" value="" placeholder="Email" />
 							<div id="email_error" class="text-danger"></div>
 						</div>
 						<!-- Active -->
