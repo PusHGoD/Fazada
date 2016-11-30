@@ -117,7 +117,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	public boolean updateInfo(Account account) {
 		if (account != null) {
 			// Inject hidden info (password, active) to arg account
-			Account hiddenInfo = this.findById(account.getId());
+			Account hiddenInfo = this.findByUsername(account.getUserName());
 			if (hiddenInfo != null) {
 				if (account.getDateOfBirth() == null) {
 					account.setDateOfBirth(hiddenInfo.getDateOfBirth());
