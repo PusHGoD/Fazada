@@ -740,6 +740,7 @@ function checkSignupInput(parent) {
 		} else if (confirm != password) {
 			parent.find("#password_confirm_error").html(
 					"Password does not match.");
+			result = false;
 		} else {
 			parent.find("#password_confirm_error").html("");
 		}
@@ -967,6 +968,7 @@ function checkChangePassword() {
 			result = false;
 		} else if (confirm != newPassword) {
 			$("#password_confirm_error").html("Password does not match.");
+			result = false;
 		} else {
 			$("#password_confirm_error").html("");
 		}

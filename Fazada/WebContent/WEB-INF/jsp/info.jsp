@@ -161,7 +161,7 @@
 	<div style="flex: 1; margin-bottom: 20px; margin-top: 20px">
 		<!-- Employee list panel -->
 		<div class="container">
-			<div class="col-sm-10 col-md-3 col-lg-3">
+			<div class="col-md-3 col-lg-3">
 				<ul class="nav nav-pills nav-stacked" data-spy="affix"
 					data-offset-top="205">
 					<li><div id="submenu" class="list-group">
@@ -172,7 +172,7 @@
 						</div></li>
 				</ul>
 			</div>
-			<div class="col-sm-10 col-md-9 col-lg-9 well well-white tab-content">
+			<div class="col-md-9 col-lg-9 well well-white tab-content">
 				<div id="ajaxMessage"></div>
 				<div id="editInfo" class="tab-pane fade clearfix in active">
 					<h3>
