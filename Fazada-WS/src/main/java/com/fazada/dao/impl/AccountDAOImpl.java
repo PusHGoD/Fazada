@@ -22,6 +22,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * @see com.spring.dao.AccountDAO#checkLogin(java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Account findByUserNameAndPassword(String username, String password) {
 		// Get current session
@@ -41,6 +42,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * @see com.fazada.dao.AccountDAO#findByEmailAndPassword(java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Account findByEmailAndPassword(String email, String password) {
 		// Get current session
@@ -59,6 +61,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * 
 	 * @see com.fazada.dao.AccountDAO#findByEmail(java.lang.String)
 	 */
+	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Account findByEmail(String email) {
 		// Get current session
@@ -74,17 +77,69 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see com.fazada.dao.impl.GenericDAOImpl#findById(java.io.Serializable)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public Account findByUserId(Integer id) {
+		if (id != null) {
+			return this.findById(id);
+		} else {
+			return null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fazada.dao.AccountDAO#findByUsername(java.lang.String)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public Account findByUsername(String userName) {
+		// Get current session
+		Session session = sessionFactory.getCurrentSession();
+		// Query with criteria object
+		Criteria criteria = session.createCriteria(Account.class);
+		criteria.add(Restrictions.eq("userName", userName));
+		// Get result
+		Account account = (Account) criteria.uniqueResult();
+		return account;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.spring.dao.AccountDAO#updateInfo(com.spring.model.Account)
 	 */
+	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean updateInfo(Account account) {
 		if (account != null) {
 			// Inject hidden info (password, active) to arg account
 			Account hiddenInfo = this.findById(account.getId());
-			account.setPassword(hiddenInfo.getPassword());
-			account.setRole(hiddenInfo.getRole());
-			// Update account and return result
-			return this.update(account);
+			if (hiddenInfo != null) {
+				if (account.getDateOfBirth() == null) {
+					account.setDateOfBirth(hiddenInfo.getDateOfBirth());
+				}
+				if (account.getEmail() == null) {
+					account.setEmail(hiddenInfo.getEmail());
+				}
+				if (account.getFirstName() == null) {
+					account.setFirstName(hiddenInfo.getFirstName());
+				}
+				if (account.getLastName() == null) {
+					account.setLastName(hiddenInfo.getLastName());
+				}
+				account.setId(hiddenInfo.getId());
+				account.setPassword(hiddenInfo.getPassword());
+				account.setRole(hiddenInfo.getRole());
+				account.setActive(hiddenInfo.isActive());
+				// Update account and return result
+				return this.update(account);
+			} else {
+				return false;
+			}
 		} else
 			return false;
 	}
@@ -94,15 +149,19 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * 
 	 * @see com.spring.dao.AccountDAO#findAll()
 	 */
+	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Account> findAll() {
 		return this.find();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.fazada.dao.AccountDAO#findAllStaff()
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Account> findAllStaff() {
 		// Get current session
 		Session session = sessionFactory.getCurrentSession();
@@ -114,10 +173,13 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 		return list;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.fazada.dao.AccountDAO#findAllUser()
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Account> findAllUser() {
 		// Get current session
 		Session session = sessionFactory.getCurrentSession();
@@ -134,37 +196,50 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * 
 	 * @see com.spring.dao.impl.GenericDAOImpl#add(java.lang.Object)
 	 */
+	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean addAccount(Account account) {
 		if (account != null) {
 			return this.add(account);
-		} else
-			return false;
+		}
+		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.fazada.dao.AccountDAO#updatePassword(com.fazada.model.Account, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fazada.dao.AccountDAO#updatePassword(com.fazada.model.Account,
+	 * java.lang.String)
 	 */
+	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public boolean updatePassword(Account account, String password) {
-		if (account != null && password != null) {
-			Account hiddenInfo = this.findById(account.getId());
-			hiddenInfo.setPassword(password);
-			return this.update(hiddenInfo);
-		} else
-			return false;
+	public boolean updatePassword(String userName, String password) {
+		if (userName != null && password != null) {
+			Account hiddenInfo = this.findByUsername(userName);
+			if (hiddenInfo != null) {
+				hiddenInfo.setPassword(password);
+				return this.update(hiddenInfo);
+			}
+		}
+		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.fazada.dao.AccountDAO#updatePasswordByEmail(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fazada.dao.AccountDAO#updatePasswordByEmail(java.lang.String,
+	 * java.lang.String)
 	 */
+	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean updatePasswordByEmail(String email, String password) {
 		if (email != null && password != null) {
 			Account account = this.findByEmail(email);
-			account.setPassword(password);
-			return this.update(account);
-		} else
-			return false;
+			if (account != null) {
+				account.setPassword(password);
+				return this.update(account);
+			}
+		}
+		return false;
 	}
 }

@@ -15,4 +15,5 @@ public interface OrderService {
 
 	public List<Order> getOrderByNumber(String orderId);
 
+	public List<Order> getOrderListByUserOrNumber(String searchValue);
 }

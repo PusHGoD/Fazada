@@ -28,8 +28,8 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		Session session = sessionFactory.getCurrentSession();
 		// Query with criteria object
 		Criteria criteria = session.createCriteria(Order.class);
-		criteria.add(Restrictions.le("dateTime", d1));
-		criteria.add(Restrictions.ge("dateTime", d2));
+		criteria.add(Restrictions.ge("dateTime", d1));
+		criteria.add(Restrictions.le("dateTime", d2));
 		// Get result
 		List<Order> orders = criteria.list();
 		// Return null if none of above conditions are met
@@ -44,7 +44,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		// Query with criteria object
 		Criteria criteria = session.createCriteria(Order.class, "ORDER");
 		criteria.createAlias("ORDER.account", "a");
-		criteria.add(Restrictions.eq("a.userName", userName));
+		criteria.add(Restrictions.like("a.userName", "%" + userName + "%"));
 		// Get result
 		List<Order> orders = criteria.list();
 		// Return null if none of above conditions are met
@@ -60,4 +60,14 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		return query.getResultList();
 	}
 
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public List<Order> getOrderListByUserOrNumber(String searchValue) {
+		Session session = sessionFactory.getCurrentSession();
+		Query<Order> query = session.createQuery(
+				"select o from Order o INNER JOIN o.account as a where str(o.id) like :orderid OR a.userName like :userName");
+		query.setParameter("orderid", "%" + searchValue + "%");
+		query.setParameter("userName", "%" + searchValue + "%");
+		return query.getResultList();
+	}
 }

@@ -1,5 +1,6 @@
 package com.fazada.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,14 +28,14 @@ public class OrderController {
 	 */
 	@Autowired
 	private OrderService service;
-	
+
 	/**
 	 * A thread-safe method to store SimpleDateFormat
 	 */
 	private static final ThreadLocal<SimpleDateFormat> tl = new ThreadLocal<SimpleDateFormat>() {
 		@Override
 		protected SimpleDateFormat initialValue() {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd yyyy");
 			return sdf;
 		}
 	};
@@ -48,28 +49,43 @@ public class OrderController {
 		sdf.setLenient(true);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
 	}
-	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public String getOrderList() throws JsonProcessingException{
+
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
+	public String getOrderList() throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(service.getOrderList());
 	}
-	
-	@RequestMapping(value="/list/time/{date1},{date2}", method = RequestMethod.GET, produces = "application/json")
-	public String getOrderListByTimeRange(@PathVariable("date1") Date d1, @PathVariable("date2") Date d2) throws JsonProcessingException{
+
+	@RequestMapping(value = "/list/time/{date1},{date2}", method = RequestMethod.GET, produces = "application/json")
+	public String getOrderListByTimeRange(@PathVariable("date1") String d1, @PathVariable("date2") String d2)
+			throws JsonProcessingException {
+		Date date1 = null, date2 = null;
+		try {
+			date1 = tl.get().parse(d1);
+			date2 = tl.get().parse(d2);
+		} catch (ParseException e) {
+			return "";
+		}
 		ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(service.getOrderListByTimeRange(d1, d2));
+		return mapper.writeValueAsString(service.getOrderListByTimeRange(date1, date2));
 	}
-	
-	@RequestMapping(value="/list/user/{user}", method = RequestMethod.GET, produces = "application/json")
-	public String getOrderListByUser(@PathVariable("user") String userName) throws JsonProcessingException{
+
+	@RequestMapping(value = "/list/user/{user}", method = RequestMethod.GET, produces = "application/json")
+	public String getOrderListByUser(@PathVariable("user") String userName) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
-		return  mapper.writeValueAsString(service.getOrderListByUser(userName));
+		return mapper.writeValueAsString(service.getOrderListByUser(userName));
 	}
-	
-	@RequestMapping(value="/list/order/{order}", method = RequestMethod.GET, produces = "application/json")
-	public String getOrderByNumber(@PathVariable("order") String orderId) throws JsonProcessingException{
+
+	@RequestMapping(value = "/list/order/{order}", method = RequestMethod.GET, produces = "application/json")
+	public String getOrderByNumber(@PathVariable("order") String orderId) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
-		return  mapper.writeValueAsString(service.getOrderByNumber(orderId));
+		return mapper.writeValueAsString(service.getOrderByNumber(orderId));
+	}
+
+	@RequestMapping(value = "/list/search/{search}", method = RequestMethod.GET, produces = "application/json")
+	public String getOrderListByUserOrNumber(@PathVariable("search") String searchValue)
+			throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.writeValueAsString(service.getOrderListByUserOrNumber(searchValue));
 	}
 }

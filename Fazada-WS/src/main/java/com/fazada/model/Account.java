@@ -33,10 +33,10 @@ public class Account implements java.io.Serializable {
 
 	private int id;
 	private String userName;
-	
+
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
-	
+
 	private String firstName;
 	private String lastName;
 	private Date dateOfBirth;
@@ -74,7 +74,7 @@ public class Account implements java.io.Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	public int getId() {
 		return this.id;
@@ -84,7 +84,7 @@ public class Account implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "user_name", nullable = false, length = 20)
+	@Column(name = "user_name", nullable = false, length = 20, unique = true)
 	public String getUserName() {
 		return this.userName;
 	}
@@ -157,15 +157,15 @@ public class Account implements java.io.Serializable {
 		this.role = role;
 	}
 
-//	@OneToMany(fetch = FetchType.EAGER, mappedBy = "account")
-//	@JsonManagedReference(value="account-order")
-//	@JsonIgnore
-//	public Set<Order> getOrders() {
-//		return this.orders;
-//	}
-//
-//	public void setOrders(Set<Order> orders) {
-//		this.orders = orders;
-//	}
+	// @OneToMany(fetch = FetchType.EAGER, mappedBy = "account")
+	// @JsonManagedReference(value="account-order")
+	// @JsonIgnore
+	// public Set<Order> getOrders() {
+	// return this.orders;
+	// }
+	//
+	// public void setOrders(Set<Order> orders) {
+	// this.orders = orders;
+	// }
 
 }

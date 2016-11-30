@@ -110,6 +110,16 @@ public class AccountServiceImpl implements AccountService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * com.fazada.service.AccountService#getAccountByUserName(java.lang.String)
+	 */
+	public Account getAccountByUserName(String userName) {
+		return dao.findByUsername(userName);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.spring.service.AccountService#getAccountList()
 	 */
 	public List<Account> getAccountList() {
@@ -139,15 +149,55 @@ public class AccountServiceImpl implements AccountService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.spring.service.AccountService#addNewAccount(com.spring.entity.
-	 * Account, java.lang.String)
+	 * @see
+	 * com.fazada.service.AccountService#addNewStaff(com.fazada.model.Account,
+	 * java.lang.String, java.lang.String, int)
 	 */
-	public boolean addNewAccount(Account input, String from, String to, int passSize) {
+	public boolean addNewStaff(Account input, String from, String to, int passSize) {
 		if (input != null) {
 			String enpass = randomPassword(passSize);
 			input.setPassword(encryptMD5(enpass));
-			mail.sendAddMail(from, to, input.getUserName(), enpass);
-			return dao.addAccount(input);
+			input.setRole("staff");
+			input.setActive(true);
+			boolean result = dao.addAccount(input);
+			if (result) {
+				mail.sendAddStaffMail(from, to, input.getUserName(), enpass);
+			}
+			return result;
+		}
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.spring.service.AccountService#addNewAccount(com.spring.entity.
+	 * Account, java.lang.String)
+	 */
+	public boolean addNewUser(Account input, String from, String to, int passSize) {
+		if (input != null) {
+			String enpass = randomPassword(passSize);
+			input.setPassword(encryptMD5(enpass));
+			input.setRole("user");
+			input.setActive(false);
+			boolean result = dao.addAccount(input);
+			if (result) {
+				mail.sendSignupMail(from, to, input.getUserName(), enpass);
+			}
+			return result;
+		}
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fazada.service.AccountService#changePassword(com.fazada.model.
+	 * Account)
+	 */
+	public boolean changePassword(Account input) {
+		if (input != null) {
+			return dao.updatePassword(input.getUserName(), encryptMD5(input.getPassword()));
 		}
 		return false;
 	}
@@ -159,11 +209,13 @@ public class AccountServiceImpl implements AccountService {
 	 * java.lang.String, java.lang.String)
 	 */
 	public boolean resetPassword(Account input, String from, String to) {
-
 		if (input != null && from != null && to != null) {
 			String password = randomPassword(9);
-			mail.sendResetMail(from, to, password);
-			return dao.updatePassword(input, encryptMD5(password));
+			boolean result = dao.updatePassword(input.getUserName(), encryptMD5(password));
+			if (result) {
+				mail.sendResetMail(from, to, password);
+			}
+			return result;
 		}
 		return false;
 	}
@@ -178,8 +230,11 @@ public class AccountServiceImpl implements AccountService {
 	public boolean resetPasswordByEmail(String input, String from) {
 		if (input != null && from != null) {
 			String password = randomPassword(9);
-			mail.sendResetMail(from, input, password);
-			return dao.updatePasswordByEmail(input, encryptMD5(password));
+			boolean result = dao.updatePasswordByEmail(input, encryptMD5(password));
+			if (result) {
+				mail.sendResetMail(from, input, password);
+			}
+			return result;
 		}
 		return false;
 	}

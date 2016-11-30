@@ -28,22 +28,33 @@ public interface AccountService {
 	 * @throws ParseException
 	 */
 	public boolean updateAccountInfo(Account input);
+
+	public Account getAccountByUserName(String userName);
 	
 	/**
 	 * @return List
 	 */
 	public List<Account> getAccountList();
-	
+
 	/**
 	 * @return List
 	 */
 	public List<Account> getAllStaff();
-	
+
 	/**
 	 * @return List
 	 */
 	public List<Account> getAllUser();
-	
+
+	/**
+	 * @param input
+	 * @param from
+	 * @param to
+	 * @param passSize
+	 * @return
+	 */
+	public boolean addNewStaff(Account input, String from, String to, int passSize);
+
 	/**
 	 * @param input
 	 * @param from
@@ -51,7 +62,13 @@ public interface AccountService {
 	 * @param passSize
 	 * @return add result
 	 */
-	public boolean addNewAccount(Account input, String from, String to, int passSize);
+	public boolean addNewUser(Account input, String from, String to, int passSize);
+
+	/**
+	 * @param input
+	 * @return change password result
+	 */
+	public boolean changePassword(Account input);
 	
 	/**
 	 * @param from
@@ -60,7 +77,7 @@ public interface AccountService {
 	 * @return reset password result
 	 */
 	public boolean resetPassword(Account input, String from, String to);
-	
+
 	/**
 	 * @param input
 	 * @param from
