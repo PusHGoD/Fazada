@@ -33,6 +33,9 @@ $(document)
 							text : 'In ' + currentYear
 						}));
 					}
+					if ($('body').is('#account-info-page')) {
+						$(loadInfo());
+					}
 
 					$('[data-toggle="offcanvas"]').click(function() {
 						$('#wrapper').toggleClass('toggled');
@@ -85,107 +88,49 @@ $(document)
 										}
 									});
 
-					$("#login-btn")
-							.click(
-									function() {
-										if (checkLoginInput()) {
-											var data = $("#loginForm")
-													.serializeArray();
-											var json = convertArrayToJSON(data);
-											$
-													.ajax({
-														url : "/fazadaws/account/login",
-														type : "POST",
-														contentType : "application/json; charset=utf-8",
-														dataType : "text",
-														data : JSON
-																.stringify(json),
-														success : function(
-																response) {
-															switch (response) {
-															case "admin":
-															case "user":
-															case "staff": {
-																var input = $(
-																		"<input>")
-																		.attr(
-																				"type",
-																				"hidden")
-																		.attr(
-																				"name",
-																				"role")
-																		.val(
-																				response);
-																$('#loginForm')
-																		.append(
-																				$(input));
-																$("#loginForm")
-																		.submit();
-																break;
-															}
-															default: {
-																showAJAXErrorMessage(response);
-																break;
-															}
-															}
-														},
-														error : function(
-																response) {
-															showAJAXErrorMessage(response);
-														}
-													});
-										}
-									});
+					var timer;
 
-					$("#signup-btn")
-							.click(
-									function() {
-										if (checkSignupInput($("#signupForm"))) {
-											var data = $("#signupForm")
-													.serializeArray();
-											var json = convertArrayToJSON(data);
-											$
-													.ajax({
-														url : 'http://localhost:8080/fazadaws/account/signup',
-														type : "POST",
-														contentType : "application/json; charset=utf-8",
-														dataType : "text",
-														data : JSON
-																.stringify(json),
-														success : function(
-																response) {
-															showAJAXSuccessMessage(response);
-														},
-														error : function(
-																response) {
-															alert(JSON
-																	.stringify(response));
-															showAJAXErrorMessage(response);
-														}
-													});
-										}
-									});
+					$("#searchForm").keyup(
+							function() {
+								clearTimeout(timer);
+								timer = setTimeout(function(event) {
+									if ($("#search").val() == "") {
+										loadOrder();
+									} else {
+										searchOrderByUserNameOrOrderId($(
+												"#search").val());
+									}
+									$("#search").focus();
+								}, 500);
 
-					$("#forget-btn")
-							.click(
-									function() {
-										var data = $("#forgetForm").find(
-												"#email").val();
-										$
-												.ajax({
-													url : "http://localhost:8080/fazadaws/account/reset",
-													type : "POST",
-													contentType : "text/plain; charset=utf-8",
-													dataType : "text",
-													data : data,
-													success : function(response) {
-														showAJAXSuccessMessage(response);
-													},
-													error : function(response) {
-														showAJAXErrorMessage(response);
-													}
-												});
-									})
+							});
+
+					$("#loginForm").keypress(function(event) {
+						if (event.which == 13) {
+							event.preventDefault();
+							requestLogin();
+						}
+					});
+
+					$("#login-btn").click(requestLogin);
+
+					$("#signupForm").keypress(function(event) {
+						if (event.which == 13) {
+							event.preventDefault();
+							requestSignUp();
+						}
+					});
+
+					$("#signup-btn").click(requestSignUp);
+
+					$("#forgetForm").keypress(function(event) {
+						if (event.which == 13) {
+							event.preventDefault();
+							requestResetPassword();
+						}
+					});
+
+					$("#forget-btn").click(requestResetPassword)
 
 					$("#user-update-btn").click(function() {
 						if (checkUpdateInput()) {
@@ -247,8 +192,206 @@ $(document)
 								}
 							});
 
+					$("#manager-add-btn")
+							.click(
+									function() {
+										if (checkManagementInput($("#addModal"))) {
+											var data = $("#addModal").find(
+													"#addForm")
+													.serializeArray();
+											var json = convertArrayToJSON(data);
+											$
+													.ajax({
+														url : 'http://localhost:8080/fazadaws/account/add',
+														type : "POST",
+														contentType : "application/json; charset=utf-8",
+														dataType : "text",
+														data : JSON
+																.stringify(json),
+														success : function(
+																response) {
+															loadUser();
+															showAJAXSuccessMessage(response);
+														},
+														error : function(data,
+																message, xhr) {
+															showAJAXErrorMessage(data.responseText);
+														}
+													});
+											$("#addModal").modal("hide");
+										}
+									});
+
+					$("#manager-edit-btn")
+							.click(
+									function() {
+										if (checkUpdateUser($("#editModal"))) {
+											var data = $("#editModal").find(
+													"#editForm")
+													.serializeArray();
+											var json = convertArrayToJSON(data);
+											$
+													.ajax({
+														url : 'http://localhost:8080/fazadaws/account/edit',
+														type : "POST",
+														contentType : "application/json; charset=utf-8",
+														dataType : "text",
+														data : JSON
+																.stringify(json),
+														success : function(
+																response) {
+															loadUser();
+															showAJAXSuccessMessage(response);
+														},
+														error : function(data,
+																message, xhr) {
+															showAJAXErrorMessage(data.responseText);
+														}
+
+													});
+											$("#editModal").modal("hide");
+										}
+									});
+
+					$("#password-change-btn")
+							.click(
+									function() {
+										if (checkChangePassword()) {
+											var data = $("#changePassForm")
+													.serializeArray();
+											var json = convertArrayToJSON(data);
+											$
+													.ajax({
+														url : "http://localhost:8080/fazadaws/account/changePassword",
+														type : "POST",
+														contentType : "application/json; charset=utf-8",
+														dataType : "text",
+														data : JSON
+																.stringify(json),
+														success : function(
+																response) {
+															showAJAXSuccessMessage(response);
+														},
+														error : function(data,
+																message, xhr) {
+															showAJAXErrorMessage(data.responseText);
+														}
+
+													});
+											$("#old_password").val("");
+											$("#new_password").val("");
+											$("#confirm").val("");
+										}
+									});
+
+					$(".submenu").click(function() {
+						$("#submenu").find(".submenu").removeClass("active");
+						$(this).addClass("active");
+					})
 				});
 
+/* Normal AJAX functions */
+function requestLogin() {
+	if (checkLoginInput()) {
+		var data = $("#loginForm").serializeArray();
+		var json = convertArrayToJSON(data);
+		$.ajax({
+			url : "/fazadaws/account/login",
+			type : "POST",
+			contentType : "application/json; charset=utf-8",
+			dataType : "text",
+			data : JSON.stringify(json),
+			success : function(response) {
+				switch (response) {
+				case "admin":
+				case "user":
+				case "staff": {
+					var input = $("<input>").attr("type", "hidden").attr(
+							"name", "role").val(response);
+					$('#loginForm').append($(input));
+					$("#loginForm").submit();
+					break;
+				}
+				default: {
+					showAJAXErrorMessage(response);
+					break;
+				}
+				}
+			},
+			error : function(data, message, xhr) {
+				showAJAXErrorMessage(data.responseText);
+			}
+		});
+	}
+}
+
+function requestSignUp() {
+	if (checkSignupInput($("#signupForm"))) {
+		var data = $("#signupForm").serializeArray();
+		var json = convertArrayToJSON(data);
+		$.ajax({
+			url : 'http://localhost:8080/fazadaws/account/signup',
+			type : "POST",
+			contentType : "application/json; charset=utf-8",
+			dataType : "text",
+			data : JSON.stringify(json),
+			success : function(response) {
+				showAJAXSuccessMessage(response);
+			},
+			error : function(data, message, xhr) {
+				showAJAXErrorMessage(data.responseText);
+			}
+		});
+	}
+}
+
+function requestResetPassword() {
+	var email = $("#forgetForm").find("#email").val();
+	if (email == "") {
+		$("#forgetForm").find("#email_error").html("Please input email.");
+	} else if (!email
+			.match("^(([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+)?$")) {
+		$("#forgetForm").find("#email_error").html(
+				"Email format is not correct.");
+	} else {
+		$("#forgetForm").find("#email_error").html("");
+		var data = $("#forgetForm").find("#email").val();
+		$.ajax({
+			url : "http://localhost:8080/fazadaws/account/reset",
+			type : "POST",
+			contentType : "text/plain; charset=utf-8",
+			dataType : "text",
+			data : data,
+			success : function(response) {
+				showAJAXSuccessMessage(response);
+			},
+			error : function(data, message, xhr) {
+				showAJAXErrorMessage(data.responseText);
+			}
+		});
+	}
+}
+
+function searchOrderByUserNameOrOrderId(value) {
+	$.ajax({
+		url : '/fazadaws/order/list/search/' + value,
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		success : function(list) {
+			$('#table').bootstrapTable("load", list);
+			$('#table').on('click-row.bs.table', function(e, row, $element) {
+				$('.success').removeClass('success');
+				$($element).addClass('success');
+			});
+			$('#items').text(list.length);
+		},
+		error : function() {
+			showAJAXErrorMessage('Error in loading data');
+		}
+	})
+}
+
+/* Convert Array To JSON */
 function convertArrayToJSON(data) {
 	var json = {};
 	$.each(data, function(v) {
@@ -280,7 +423,7 @@ function loadUser() {
 		contentType : "application/json; charset=utf-8",
 		dataType : "json",
 		success : function(list) {
-			$('#table').bootstrapTable("destroy");
+			$('#table').bootstrapTable("load", list);
 			$('#table').bootstrapTable({
 				data : list
 			});
@@ -304,7 +447,7 @@ function loadOrder() {
 		contentType : "application/json; charset=utf-8",
 		dataType : "json",
 		success : function(list) {
-			$('#table').bootstrapTable("destroy");
+			$('#table').bootstrapTable("load", list);
 			$('#table').bootstrapTable({
 				data : list
 			});
@@ -312,6 +455,9 @@ function loadOrder() {
 				$('.success').removeClass('success');
 				$($element).addClass('success');
 			});
+			$('#table').on('search.bs.table', function(e, text) {
+				showAJAXSuccessMessage(1);
+			})
 			$('#items').text(list.length);
 		},
 		error : function() {
@@ -322,16 +468,12 @@ function loadOrder() {
 
 function loadOrderWithRange(priorDate, today) {
 	$.ajax({
-		url : '/fazadaws/order/list/time/'
-				+ priorDate.toISOString().slice(0, 10) + ","
-				+ today.toISOString().slice(0, 10),
+		url : '/fazadaws/order/list/time/' + priorDate.toDateString() + ","
+				+ today.toDateString(),
 		type : "GET",
 		contentType : "application/json; charset=utf-8",
 		success : function(list) {
-			$('#table').bootstrapTable("destroy");
-			$('#table').bootstrapTable({
-				data : list
-			});
+			$('#table').bootstrapTable("load", list);
 			$('#table').on('click-row.bs.table', function(e, row, $element) {
 				$('.success').removeClass('success');
 				$($element).addClass('success');
@@ -344,6 +486,34 @@ function loadOrderWithRange(priorDate, today) {
 	});
 }
 
+function loadInfo() {
+	$
+			.ajax({
+				url : '/fazadaws/account/info/' + $("#accountInfo").text(),
+				type : "GET",
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				success : function(data) {
+					$("#infoDiv").find("#id").html(data.id);
+					$("#infoDiv").find("#userName").html(data.userName);
+					$("#infoDiv").find("#firstName").html(data.firstName);
+					$("#infoDiv").find("#firstName").editable('setValue',
+							data.firstName);
+					$("#infoDiv").find("#lastName").html(data.lastName);
+					$("#infoDiv").find("#lastName").editable('setValue',
+							data.lastName);
+					$("#infoDiv").find("#dateOfBirth").html(data.dateOfBirth);
+					$("#infoDiv").find("#dateOfBirth").editable('setValue',
+							data.dateOfBirth, true);
+					$("#infoDiv").find("#email").html(data.email);
+					$("#infoDiv").find("#email").editable('setValue',
+							data.email);
+				},
+				error : function(response) {
+					showAJAXErrorMessage(response);
+				}
+			})
+}
 /* Get selected row */
 function getSelectedRow() {
 	var index = $("#table").find('tr.success').data('index');
@@ -412,10 +582,8 @@ function statusFormatter(value, row, index) {
 
 function actionFormatter(value, row, index) {
 	return [
-			'<a class="edit ml10" href="javascript:void(0)" title="Edit" data-toggle="modal" data-target="#editModal">',
+			'<a class="edit ml10" href="#" title="Edit" data-toggle="modal" data-target="#editModal">',
 			'<i class="glyphicon glyphicon-edit"></i>', '</a> ', ].join('');
-	// '<a class="reset ml10" href="javascript:void(0)" title="Reset">',
-	// '<i class="glyphicon glyphicon-refresh"></i>', '</a> ',
 }
 
 /* Date operations */
@@ -702,6 +870,106 @@ function checkManagementInput(parent) {
 		result = false;
 	} else {
 		parent.find("#email_error").html("");
+	}
+	return result;
+}
+
+function checkUpdateUser(parent) {
+	var firstname = parent.find("#firstName").val();
+	var lastname = parent.find("#lastName").val();
+	var dob = parent.find("#dateOfBirth").val();
+	var email = parent.find("#email").val();
+	var result = true;
+	if (firstname == null || firstname == "") {
+		parent.find("#firstname_error").html("Please enter first name.");
+		result = false;
+	} else if (firstname.length > 30) {
+		parent.find("#firstname_error").html("First name is too long.");
+		result = false;
+	} else {
+		parent.find("#firstname_error").html("");
+	}
+	if (lastname == null || lastname == "") {
+		parent.find("#lastname_error").html("Please enter last name.");
+		result = false;
+	} else if (lastname.length > 30) {
+		parent.find("#lastname_error").html("Last name is too long.");
+		result = false;
+	} else {
+		parent.find("#lastname_error").html("");
+	}
+
+	if (dob == null || dob == "") {
+		parent.find("#dob_error").html("Please enter date of birth.");
+		result = false;
+	} else {
+		var date = parseDate(dob, "dd/mm/yyyy");
+		if (date == null) {
+			parent.find("#dob_error").html(
+					"Date of birth is not in correct format.");
+			result = false;
+		} else {
+			var today = new Date();
+			today.setDate(today.getDate() - 1);
+			if (date >= today) {
+				parent.find("#dob_error").html(
+						"Date of birth cannot be later than today.");
+				result = false;
+			} else {
+				parent.find("#dob_error").html("");
+			}
+		}
+	}
+
+	if (email == null || email == "") {
+		parent.find("#email_error").html("Please enter email.");
+		result = false;
+	} else if (email.length > 50) {
+		parent.find("#email_error").html("Email is too long.");
+		result = false;
+	} else if (!email
+			.match("^(([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+)?$")) {
+		parent.find("#email_error").html("Email's format is not valid");
+		result = false;
+	} else {
+		parent.find("#email_error").html("");
+	}
+	return result;
+}
+
+function checkChangePassword() {
+	var oldPassword = $("#old_password").val();
+	var newPassword = $("#new_password").val();
+	var confirm = $("#confirm").val();
+	var result = true;
+	if (oldPassword == null || oldPassword == "") {
+		$("#old_password_error").html("Please enter password.");
+		result = false;
+	} else if (oldPassword.length > 20) {
+		$("#old_password_error").html("Password is too long.");
+		result = false;
+	} else {
+		$("#old_password_error").html("");
+	}
+	if (newPassword == null || newPassword == "") {
+		$("#new_password_error").html("Please enter password.");
+		result = false;
+	} else if (newPassword.length > 20) {
+		$("#new_password_error").html("Password is too long.");
+		result = false;
+	} else {
+		$("#new_password_error").html("");
+		if (confirm == null || confirm == "") {
+			$("#password_confirm_error").html("Please re-type password.");
+			result = false;
+		} else if (confirm.length > 20) {
+			$("#password_confirm_error").html("Password is too long.");
+			result = false;
+		} else if (confirm != newPassword) {
+			$("#password_confirm_error").html("Password does not match.");
+		} else {
+			$("#password_confirm_error").html("");
+		}
 	}
 	return result;
 }

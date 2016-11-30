@@ -11,7 +11,6 @@
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
 <!-- Optional theme -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
@@ -23,7 +22,6 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css" />
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
-
 <!-- Bootstrap table -->
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.css" />
@@ -39,7 +37,7 @@
 <title>User Management</title>
 </head>
 <body id="user-management-page">
-	<div>
+	<div class="center-block">
 		<a href="main"><img
 			src="<c:url value='/Resources/pic/'/>FazadaGroupLogo.jpg"
 			style="width: 300px; padding-left: 60px" /></a>
@@ -61,8 +59,22 @@
 					<ul class="dropdown-menu" role="menu">
 						<li class="dropdown-header"></li>
 						<c:if test="${role eq 'admin'}">
-							<li><a href="#"><small>Quản lý danh sách tài
-										khoản</small></a></li>
+							<li><a href="/fazada/account/info"><small>Quản
+										lý tài khoản</small></a></li>
+							<li><a href="/fazada/manager"><small>Quản lý
+										danh sách tài khoản</small></a></li>
+						</c:if>
+						<c:if test="${role eq 'staff'}">
+							<li><a href="/fazada/account/info"><small>Quản
+										lý tài khoản</small></a></li>
+							<li><a href="/fazada/order"><small>Quản lý danh
+										sách đơn hàng</small></a></li>
+						</c:if>
+						<c:if test="${role eq 'user'}">
+							<li><a href="/fazada/account/info"><small>Quản
+										lý tài khoản</small></a></li>
+							<li><a href="/fazada/account/order"><small>Đơn
+										hàng của tôi</small></a></li>
 						</c:if>
 						<li><a href="logout"><small>Đăng xuất</small></a></li>
 					</ul></li>
@@ -144,7 +156,7 @@
 	<!-- /#wrapper -->
 
 	<!-- Container div -->
-	<div style="flex: 1; margin-bottom: 10px">
+	<div style="flex: 1; margin-bottom: 20px; margin-top: 20px">
 		<!-- Employee list panel -->
 		<div class="container">
 			<h3>
@@ -168,18 +180,21 @@
 				</div>
 				<!-- JSON auto-generated table -->
 				<table id="table" class="table" data-method="POST"
-					data-show-toggle="true" data-toolbar="#toolbar" data-search="true">
+					data-show-toggle="true" data-toolbar="#toolbar"
+					data-pagination="true" data-page-size="5"
+					data-page-list="[5,10,20,50,100,200]">
 					<thead>
 						<tr>
-							<th data-field="id">ID</th>
+							<th data-field="id" data-sortable="true">ID</th>
 							<th data-field="userName" data-sortable="true">Username</th>
-							<th data-field="firstName">First name</th>
-							<th data-field="lastName">Last name</th>
+							<th data-field="firstName" data-sortable="true">First name</th>
+							<th data-field="lastName" data-sortable="true">Last name</th>
 							<th data-field="dateOfBirth" data-formatter="dateFormatter"
 								data-sortable="true">Date of birth</th>
-							<th data-field="email">Email</th>
-							<th data-field="active" data-formatter="activeFormatter">Active</th>
-							<th data-field="role">Role</th>
+							<th data-field="email" data-sortable="true">Email</th>
+							<th data-field="active" data-formatter="activeFormatter"
+								data-sortable="true">Active</th>
+							<th data-field="role" data-sortable="true">Role</th>
 							<th data-field="action" data-formatter="actionFormatter"
 								data-events="actionEvents">Action</th>
 						</tr>
@@ -205,30 +220,30 @@
 		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action="add.htm" id="addForm">
+				<form action="add" id="addForm">
 					<!-- Modal header -->
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-hidden="true">×</button>
-						<h4 class="modal-title">Add user</h4>
+						<h4 class="modal-title">Add new staff</h4>
 					</div>
 					<!-- Modal body -->
 					<div class="modal-body">
 						<!-- User name -->
 						<div class="form-group">
-							User name: <input name="userName" type="text"
+							User name: <input id="userName" name="userName" type="text"
 								class="form-control" value="" placeholder="User name" />
 							<div id="username_error" class="text-danger"></div>
 						</div>
 						<!-- First name -->
 						<div class="form-group">
-							First name: <input name="firstName" type="text"
+							First name: <input id="firstName" name="firstName" type="text"
 								class="form-control" value="" placeholder="First name" />
 							<div id="firstname_error" class="text-danger"></div>
 						</div>
 						<!-- Last name -->
 						<div class="form-group">
-							Last name: <input name="lastName" type="text"
+							Last name: <input id="lastName" name="lastName" type="text"
 								class="form-control" value="" placeholder="Last name" />
 							<div id="lastname_error" class="text-danger"></div>
 						</div>
@@ -236,23 +251,16 @@
 						<div class="form-group">
 							Date of birth:
 							<!-- Date picker -->
-							<input name="dateOfBirth" type="text" data-provide="datepicker"
-								class="form-control" data-date-format="dd/mm/yyyy" value=""
-								placeholder="dd/mm/yyyy" />
+							<input id="dateOfBirth" name="dateOfBirth" type="text"
+								data-provide="datepicker" class="form-control"
+								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy" />
 							<div id="dob_error" class="text-danger"></div>
 						</div>
 						<!-- Email -->
 						<div class="form-group">
-							Email: <input name="email" type="text" class="form-control"
-								value="" placeholder="Email" />
+							Email: <input id="email" name="email" type="text"
+								class="form-control" value="" placeholder="Email" />
 							<div id="email_error" class="text-danger"></div>
-						</div>
-						<!-- Active -->
-						<div class="form-group">
-							Active: <input type="radio" name="active" value="true"
-								checked="true" /> <strong class="text-success">Active</strong>
-							<input type="radio" name="active" value="false" /> <strong
-								class="text-danger">Inactive</strong>
 						</div>
 					</div>
 
@@ -272,7 +280,7 @@
 		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form modelAttribute="account" action="edit.htm" id="editForm">
+				<form action="edit" id="editForm">
 					<!-- Modal header -->
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
@@ -281,7 +289,8 @@
 					</div>
 					<!-- Modal body -->
 					<div class="modal-body">
-						<input type="hidden" id="id" name="id" />
+						<input type="hidden" id="id" name="id" /> <input type="hidden"
+							id="userName" name="userName" />
 						<!-- First name -->
 						<div class="form-group">
 							First name: <input id="firstName" name="firstName" type="text"

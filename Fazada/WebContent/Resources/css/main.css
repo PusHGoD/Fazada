@@ -381,3 +381,7 @@ body, html {
 	transition: 1s;
 	-webkit-transition: 1s;
 }
+
+.well-white {
+    background: rgb(255, 255, 255);
+}

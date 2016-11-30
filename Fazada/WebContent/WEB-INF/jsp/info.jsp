@@ -18,48 +18,45 @@
 <!-- Latest compiled and minified JavaScript -->
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<!-- Bootstrap table -->
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.css" />
+<link
+	href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css"
+	rel="stylesheet" />
 <script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.js"></script>
-<link href="<c:url value='/Resources/css/main.css' />" rel="stylesheet" />
+	src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<link href="<c:url value='/Resources/css/main.css'/>" rel="stylesheet" />
 <link
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-	rel="stylesheet">
+	rel="stylesheet" />
 <script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/toolbar/bootstrap-table-toolbar.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/flat-json/bootstrap-table-flat-json.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/filter-control/bootstrap-table-filter-control.js">
-	
-</script>
+	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment.js"></script>
 <!-- Custom javascript file (mostly validation) -->
 <script type="text/javascript"
 	src='<c:url value="/Resources/js/custom.js"/>'></script>
-<title>Order Management</title>
+<script type="text/javascript"
+	src='<c:url value="/Resources/js/editable.js"/>'></script>
+<title>Account Info</title>
 </head>
-<body id="order-management-page">
+<body id="account-info-page">
 	<div class="center-block">
-		<a href="main"><img
+		<a href="/fazada/main"><img
 			src="<c:url value='/Resources/pic/'/>FazadaGroupLogo.jpg"
 			style="width: 300px; padding-left: 60px" /></a>
 	</div>
 	<div id="wrapper">
 		<!-- Sidebar -->
-		<div class="overlay"></div>
+		<div class="overlay" style="z-index: 3"></div>
 		<nav class="navbar navbar-inverse navbar-fixed-top"
 			id="sidebar-wrapper" role="navigation">
 		<ul class="nav sidebar-nav">
-			<c:if test="${empty accountInfo or empty role or role ne 'staff'}">
-				<c:redirect url="main"></c:redirect>
+			<c:if test="${empty accountInfo or empty role}">
+				<c:redirect url="/main"></c:redirect>
 			</c:if>
 			<c:if test="${not empty accountInfo}">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" style="font-size: 18px"><img
 						src="<c:url value='/Resources/pic/'/>user.png" height="30px"
-						width="30px" /><span> ${accountInfo}</span><span class="caret"></span></a>
+						width="30px" /><span id="accountInfo">${accountInfo}</span><span
+						class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
 						<li class="dropdown-header"></li>
 						<c:if test="${role eq 'admin'}">
@@ -80,7 +77,7 @@
 							<li><a href="/fazada/account/order"><small>Đơn
 										hàng của tôi</small></a></li>
 						</c:if>
-						<li><a href="logout"><small>Đăng xuất</small></a></li>
+						<li><a href="/fazada/logout"><small>Đăng xuất</small></a></li>
 					</ul></li>
 			</c:if>
 			<li>
@@ -164,46 +161,83 @@
 	<div style="flex: 1; margin-bottom: 20px; margin-top: 20px">
 		<!-- Employee list panel -->
 		<div class="container">
-			<h3>
-				<strong>Order list</strong>
-			</h3>
-			<div id="ajaxMessage"></div>
-			<!-- Div conatining information -->
-			<div>
-				<!-- Toolbar -->
-				<form id="searchForm">
-					<input type="text" class="form-control" id="search"
-						placeholder="&#xF002; Search username/order no."
-						style="font-family: Arial, FontAwesome" />
-				</form>
-				<div id="toolbar" class="btn-group">
-					<span id="items">0</span> orders in <select id="order-select">
-						<option>All</option>
-						<option>In 15 days</option>
-						<option>In 30 days</option>
-						<option>In 3 months</option>
-						<option>In 6 months</option>
-					</select>
-
+			<div class="col-sm-10 col-md-3 col-lg-3">
+				<ul class="nav nav-pills nav-stacked" data-spy="affix"
+					data-offset-top="205">
+					<li><div id="submenu" class="list-group">
+							<a href="#editInfo" data-toggle="tab"
+								class="list-group-item submenu active">Chỉnh sửa thông tin</a> <a
+								href="#updatePassword" data-toggle="tab"
+								class="list-group-item submenu">Đổi mật khẩu</a>
+						</div></li>
+				</ul>
+			</div>
+			<div class="col-sm-10 col-md-9 col-lg-9 well well-white tab-content">
+				<div id="ajaxMessage"></div>
+				<div id="editInfo" class="tab-pane fade clearfix in active">
+					<h3>
+						<strong>Account Info</strong>
+					</h3>
+					<br />
+					<!-- Div conatining information -->
+					<div id="infoDiv">
+						<div class="form-group">
+							<label>ID:</label> <span id="id"></span>
+						</div>
+						<div class="form-group">
+							<label>Username:</label> <span id="userName"></span>
+						</div>
+						<div class="form-group">
+							<label>First name:</label> <a href="#" id="firstName"
+								data-pk="${accountInfo}" data-type="text" data-value=""></a>
+						</div>
+						<div class="form-group">
+							<label>Last name:</label> <a href="#" id="lastName"
+								data-pk="${accountInfo}" data-type="text" data-value=""></a>
+						</div>
+						<div class="form-group">
+							<label>Date of birth:</label> <a href="#" id="dateOfBirth"
+								data-pk="${accountInfo}" data-type="combodate" data-value=""
+								data-format="YYYY-MM-DD" data-viewformat="DD/MM/YYYY"
+								data-template="D / MMMM / YYYY"></a>
+						</div>
+						<div class="form-group">
+							<label>Email:</label> <a href="#" id="email"
+								data-pk="${accountInfo}" data-type="text" data-value=""></a>
+						</div>
+					</div>
 				</div>
-				<!-- JSON auto-generated table -->
-				<table id="table" class="table" data-method="POST"
-					data-show-toggle="true" data-toolbar="#toolbar"
-					data-pagination="true" data-page-size="5" data-page-list="[5,10,20,50,100,200]">
-					<thead>
-						<tr>
-							<th data-field="orderId" data-sortable="true">Order No.</th>
-							<th data-field="account.userName" data-sortable="true">Order
-								user</th>
-							<th data-field="dateTime" data-formatter="dateFormatter"
-								data-sortable="true">Order date</th>
-							<th data-field="total" data-formatter="priceFormatter"
-								data-sortable="true">Total</th>
-							<th data-field="orderstatus" data-formatter="statusFormatter"
-								data-sortable="true">Status</th>
-						</tr>
-					</thead>
-				</table>
+				<div id="updatePassword" class="tab-pane fade clearfix">
+					<h3>
+						<strong>Change password</strong>
+					</h3>
+					<br />
+					<form id="changePassForm">
+						<input type="hidden" id="userName" name="userName"
+							value="${accountInfo}" />
+						<div class="form-group">
+							Old Password: <input type="password" class="form-control"
+								value="" placeholder="Password" id="old_password"
+								name="oldPassword" />
+							<div id="old_password_error" class="text-danger"></div>
+						</div>
+						<div class="form-group">
+							New Password: <input type="password" class="form-control"
+								value="" placeholder="Password" id="new_password"
+								name="password" />
+							<div id="new_password_error" class="text-danger"></div>
+						</div>
+						<div class="form-group">
+							Confirm password: <input type="password" class="form-control"
+								value="" placeholder="Confirm password" id="confirm" />
+							<div id="password_confirm_error" class="text-danger"></div>
+						</div>
+						<div class="form-group pull-right">
+							<button type="button" id="password-change-btn"
+								class="btn btn-primary">Update password</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

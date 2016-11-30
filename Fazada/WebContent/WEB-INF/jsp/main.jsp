@@ -47,27 +47,32 @@
 					<ul class="dropdown-menu" role="menu">
 						<li class="dropdown-header"></li>
 						<c:if test="${role eq 'admin'}">
-							<li><a href="manager"><small>Quản lý danh sách
-										tài khoản</small></a></li>
+							<li><a href="/fazada/account/info"><small>Quản
+										lý tài khoản</small></a></li>
+							<li><a href="/fazada/manager"><small>Quản lý
+										danh sách tài khoản</small></a></li>
 						</c:if>
 						<c:if test="${role eq 'staff'}">
-							<li><a href="order"><small>Quản lý đơn hàng</small></a></li>
+							<li><a href="/fazada/account/info"><small>Quản
+										lý tài khoản</small></a></li>
+							<li><a href="/fazada/order"><small>Quản lý danh
+										sách đơn hàng</small></a></li>
 						</c:if>
 						<c:if test="${role eq 'user'}">
-							<li><a href="account/info"><small>Quản lý tài khoản</small></a></li>
-							<li><a href="account/order"><small>Đơn hàng của tôi</small></a></li>
+							<li><a href="/fazada/account/info"><small>Quản
+										lý tài khoản</small></a></li>
+							<li><a href="/fazada/account/order"><small>Đơn
+										hàng của tôi</small></a></li>
 						</c:if>
-						<li><a href="logout"><small>Đăng xuất</small></a></li>
+						<li><a href="/fazada/logout"><small>Đăng xuất</small></a></li>
 					</ul></li>
 			</c:if>
 			<li>
-				<form class="navbar-form navbar-left">
-					<div class="form-group">
-						<input class="form-control" type="text"
-							placeholder="&#xF002; Search"
-							style="font-family: Arial, FontAwesome" />
-					</div>
-				</form>
+				<div class="navbar-text">
+					<input class="form-control" type="text"
+						placeholder="&#xF002; Search"
+						style="font-family: Arial, FontAwesome" />
+				</div>
 			</li>
 			<li><a href="#"><img
 					src="<c:url value='Resources/pic/'/>icon.png" height="30px"
@@ -218,7 +223,7 @@
 					<div id="ajaxMessage"></div>
 					<!-- User name -->
 					<div class="tab-content">
-						<div id="login" class="tab-pane fade in active">
+						<div id="login" class="tab-pane fade clearfix in active well well-sm well-white">
 							<form id="loginForm" action="login" method="POST">
 								<!-- User name -->
 								<div class="form-group">
@@ -233,14 +238,15 @@
 									<div id="password_error" class="text-danger"></div>
 								</div>
 								<!-- Login button -->
-								<div class="modal-footer">
-									<a data-toggle="tab" href="#forget">Forgot your password? </a>
+								<div class="pull-right">
+									<a data-toggle="tab" href="#forget">Forgot your password?</a> <span>
+										or </span>
 									<button type="button" id="login-btn" class="btn btn-primary"
 										style="width: 100px">Sign in</button>
 								</div>
 							</form>
 						</div>
-						<div id="signup" class="tab-pane fade">
+						<div id="signup" class="tab-pane clearfix fade well well-sm well-white">
 							<form id="signupForm" action="signup">
 								<!-- User name -->
 								<div class="form-group">
@@ -286,14 +292,14 @@
 									<div id="email_error" class="text-danger"></div>
 								</div>
 								<!-- Modal footer -->
-								<div class="modal-footer">
+								<div class="pull-right">
 									<button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
 									<button type="button" class="btn btn-primary" id="signup-btn">Sign
 										up</button>
 								</div>
 							</form>
 						</div>
-						<div id="forget" class="tab-pane fade">
+						<div id="forget" class="tab-pane clearfix fade well well-sm well-white">
 							<form action="signup" id="forgetForm">
 								<!-- User name -->
 								<div class="form-group">
@@ -302,14 +308,18 @@
 									<div id="email_error" class="text-danger"></div>
 								</div>
 								<!-- Password -->
-
-								<div class="modal-footer">
+								<div class="pull-right">
 									<button type="button" class="btn btn-default" a
 										data-toggle="tab" href="#login">Back to login</button>
 									<button type="button" id="forget-btn" class="btn btn-primary">Get
 										password</button>
 								</div>
 							</form>
+						</div>
+						<div id="success" class="tab-pane fade">
+							<div id="message"></div>
+							<button type="button" class="btn btn-default" a data-toggle="tab"
+								href="#login" data-dismiss="modal">Back to login</button>
 						</div>
 					</div>
 				</div>
