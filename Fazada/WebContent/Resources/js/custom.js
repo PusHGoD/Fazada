@@ -23,16 +23,26 @@ $(document)
 					}
 
 					if ($('body').is('#user-management-page')) {
-						$(loadUser);
+						$(loadUserList);
 					}
 					if ($('body').is('#order-management-page')) {
-						$(loadOrder);
+						$(loadOrderList);
 						var currentYear = new Date().getFullYear();
 						$('#order-select').append($('<option>', {
 							value : currentYear,
 							text : 'In ' + currentYear
 						}));
 					}
+
+					if ($('body').is('#my-order-page')) {
+						$(loadMyOrderList);
+						var currentYear = new Date().getFullYear();
+						$('#my-order-select').append($('<option>', {
+							value : currentYear,
+							text : 'In ' + currentYear
+						}));
+					}
+
 					if ($('body').is('#account-info-page')) {
 						$(loadInfo());
 					}
@@ -48,30 +58,34 @@ $(document)
 										var priorDate = new Date();
 										switch ($("#order-select").val()) {
 										case "All":
-											loadOrder();
+											loadOrderList();
 											break;
 										case "In 15 days": {
 											priorDate
 													.setDate(today.getDate() - 15);
-											loadOrderWithRange(priorDate, today);
+											loadOrderListWithRange(priorDate,
+													today);
 											break;
 										}
 										case "In 30 days": {
 											priorDate
 													.setDate(today.getDate() - 30);
-											loadOrderWithRange(priorDate, today);
+											loadOrderListWithRange(priorDate,
+													today);
 											break;
 										}
 										case "In 3 months": {
 											priorDate
 													.setMonth(today.getMonth() - 3);
-											loadOrderWithRange(priorDate, today);
+											loadOrderListWithRange(priorDate,
+													today);
 											break;
 										}
 										case "In 6 months": {
 											priorDate
 													.setMonth(today.getMonth() - 6);
-											loadOrderWithRange(priorDate, today);
+											loadOrderListWithRange(priorDate,
+													today);
 											break;
 										}
 										default: {
@@ -80,14 +94,67 @@ $(document)
 												priorDate = new Date($(
 														"#order-select").val(),
 														0, 2);
-												loadOrderWithRange(priorDate,
-														today);
+												loadOrderListWithRange(
+														priorDate, today);
 											}
+											loadMyOrderListWithRange(priorDate,
+													today);
 											break;
 										}
 										}
 									});
 
+					$("#my-order-select")
+							.change(
+									function() {
+										var today = new Date();
+										var priorDate = new Date();
+										switch ($("#my-order-select").val()) {
+										case "All":
+											loadMyOrderList();
+											break;
+										case "In 15 days": {
+											priorDate
+													.setDate(today.getDate() - 15);
+											loadMyOrderListWithRange(priorDate,
+													today);
+											break;
+										}
+										case "In 30 days": {
+											priorDate
+													.setDate(today.getDate() - 30);
+											loadMyOrderListWithRange(priorDate,
+													today);
+											break;
+										}
+										case "In 3 months": {
+											priorDate
+													.setMonth(today.getMonth() - 3);
+											loadMyOrderListWithRange(priorDate,
+													today);
+											break;
+										}
+										case "In 6 months": {
+											priorDate
+													.setMonth(today.getMonth() - 6);
+											loadMyOrderListWithRange(priorDate,
+													today);
+											break;
+										}
+										default: {
+											if (/^\d+$/.test($("#order-select")
+													.val())) {
+												priorDate = new Date($(
+														"#order-select").val(),
+														0, 2);
+												loadMyOrderListWithRange(
+														priorDate, today);
+											}
+
+											break;
+										}
+										}
+									});
 					var timer;
 
 					$("#searchForm").keyup(
@@ -416,7 +483,7 @@ function convertArrayToJSON(data) {
 }
 
 /* Load user table */
-function loadUser() {
+function loadUserList() {
 	$.ajax({
 		url : '/fazadaws/account/list',
 		type : "GET",
@@ -440,7 +507,7 @@ function loadUser() {
 }
 
 /* Load order table */
-function loadOrder() {
+function loadOrderList() {
 	$.ajax({
 		url : '/fazadaws/order/list',
 		type : "GET",
@@ -455,9 +522,6 @@ function loadOrder() {
 				$('.success').removeClass('success');
 				$($element).addClass('success');
 			});
-			$('#table').on('search.bs.table', function(e, text) {
-				showAJAXSuccessMessage(1);
-			})
 			$('#items').text(list.length);
 		},
 		error : function() {
@@ -466,7 +530,59 @@ function loadOrder() {
 	});
 }
 
-function loadOrderWithRange(priorDate, today) {
+function loadMyOrderList() {
+	$.ajax({
+		url : '/fazadaws/order/list/user/'
+				+ $("#session_userName").text().trim(),
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		dataType : "json",
+		success : function(list) {
+			$('#table').bootstrapTable("load", list);
+			$('#table').bootstrapTable({
+				data : list
+			});
+			$('#table').on('click-row.bs.table', function(e, row, $element) {
+				$('.success').removeClass('success');
+				$($element).addClass('success');
+			});
+			$('#items').text(list.length);
+		},
+		error : function() {
+			showAJAXErrorMessage('Error in loading data');
+		}
+	});
+}
+
+function loadMyOrderListWithRange(priorDate, today) {
+	$.ajax({
+		url : '/fazadaws/order/list/user/time/',
+		type : "POST",
+		contentType : "application/json; charset=utf-8",
+		dataType : "json",
+		data : JSON.stringify({
+			"userName" : $("#session_userName").text().trim(),
+			"date1" : priorDate.toDateString(),
+			"date2" : today.toDateString()
+		}),
+		success : function(list) {
+			$('#table').bootstrapTable("load", list);
+			$('#table').bootstrapTable({
+				data : list
+			});
+			$('#table').on('click-row.bs.table', function(e, row, $element) {
+				$('.success').removeClass('success');
+				$($element).addClass('success');
+			});
+			$('#items').text(list.length);
+		},
+		error : function() {
+			showAJAXErrorMessage('Error in loading data');
+		}
+	});
+}
+
+function loadOrderListWithRange(priorDate, today) {
 	$.ajax({
 		url : '/fazadaws/order/list/time/' + priorDate.toDateString() + ","
 				+ today.toDateString(),

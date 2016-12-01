@@ -118,4 +118,10 @@ public class WebController {
 		// Redirect to home page
 		return "info";
 	}
+	
+	@RequestMapping(value = "/account/order", method = RequestMethod.GET)
+	public String getMyOrderPage() {
+		// Redirect to home page
+		return "myOrder";
+	}
 }

@@ -38,11 +38,11 @@
 <!-- Custom javascript file (mostly validation) -->
 <script type="text/javascript"
 	src='<c:url value="/Resources/js/custom.js"/>'></script>
-<title>Order Management</title>
+<title>My Order</title>
 </head>
-<body id="order-management-page">
+<body id="my-order-page">
 	<div class="center-block">
-		<a href="main"><img
+		<a href="/fazada/main"><img
 			src="<c:url value='/Resources/pic/'/>FazadaGroupLogo.jpg"
 			style="width: 300px; padding-left: 60px" /></a>
 	</div>
@@ -52,14 +52,15 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top"
 			id="sidebar-wrapper" role="navigation">
 		<ul class="nav sidebar-nav">
-			<c:if test="${empty accountInfo or empty role or role ne 'staff'}">
-				<c:redirect url="main"></c:redirect>
+			<c:if test="${empty accountInfo or empty role or role ne 'user'}">
+				<c:redirect url="/main"></c:redirect>
 			</c:if>
 			<c:if test="${not empty accountInfo}">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" style="font-size: 18px"><img
 						src="<c:url value='/Resources/pic/'/>user.png" height="30px"
-						width="30px" /><span> ${accountInfo}</span><span class="caret"></span></a>
+						width="30px" /><span id="session_userName"> ${accountInfo}</span><span
+						class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
 						<li class="dropdown-header"></li>
 						<c:if test="${role eq 'admin'}">
@@ -80,7 +81,7 @@
 							<li><a href="/fazada/account/order"><small>Đơn
 										hàng của tôi</small></a></li>
 						</c:if>
-						<li><a href="logout"><small>Đăng xuất</small></a></li>
+						<li><a href="/fazada/logout"><small>Đăng xuất</small></a></li>
 					</ul></li>
 			</c:if>
 			<li>
@@ -144,7 +145,6 @@
 					<li><a href="#">Bóng bàn</a></li>
 				</ul></li>
 		</ul>
-
 		</nav>
 		<!-- /#sidebar-wrapper -->
 
@@ -165,19 +165,14 @@
 		<!-- Employee list panel -->
 		<div class="container">
 			<h3>
-				<strong>Order list</strong>
+				<strong>My Order</strong>
 			</h3>
 			<div id="ajaxMessage"></div>
 			<!-- Div conatining information -->
 			<div>
 				<!-- Toolbar -->
-				<form id="searchForm">
-					<input type="text" class="form-control" id="search"
-						placeholder="&#xF002; Search username/order no."
-						style="font-family: Arial, FontAwesome" />
-				</form>
 				<div id="toolbar" class="btn-group">
-					<span id="items">0</span> orders in <select id="order-select">
+					<span id="items">0</span> orders in <select id="my-order-select">
 						<option>All</option>
 						<option>In 15 days</option>
 						<option>In 30 days</option>
