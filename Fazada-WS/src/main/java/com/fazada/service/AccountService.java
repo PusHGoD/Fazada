@@ -62,7 +62,7 @@ public interface AccountService {
 	 * @param passSize
 	 * @return add result
 	 */
-	public boolean addNewUser(Account input, String from, String to, int passSize);
+	public boolean addNewUser(Account input, String from, String to);
 
 	/**
 	 * @param input

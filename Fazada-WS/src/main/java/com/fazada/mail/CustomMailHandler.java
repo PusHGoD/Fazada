@@ -58,7 +58,7 @@ public class CustomMailHandler {
 				messageBodyPart.setText(
 						"You has been assigned new account on Fazada by the administrator.<br/>Your username is: "
 								+ username + "<br/>" + "Your password is: " + password
-								+ "<br/>Please click this link to login to Fazada and change password:<br/> <a href='http://localhost:8080/fazada/main'>http://localhost:8080/fazada/main</a>",
+								+ "<br/>Please click this link to login to Fazada and change password:<br/> <a href='http://localhost:8080/fazada/main'>Fazada home page</a><br/><br/>Best regards,<br/><br/>Fazada team",
 						"UTF-8", "html");
 
 				// Create a multipar message
@@ -84,8 +84,8 @@ public class CustomMailHandler {
 	 * @param username
 	 * @param password
 	 */
-	public void sendSignupMail(String from, String to, String username, String password) {
-		if (from != null && to != null && password != null) {
+	public void sendSignupMail(String from, String to, String username) {
+		if (from != null && to != null) {
 
 			// Assuming you are sending email from localhost
 			String host = "localhost";
@@ -116,10 +116,11 @@ public class CustomMailHandler {
 				MimeBodyPart messageBodyPart = new MimeBodyPart();
 
 				// Fill the message
-				messageBodyPart.setText("You has registered your account on Fazada.<br/>Your username is: " + username
-						+ "<br/>" + "Your password is: " + password
-						+ "<br/>Please click this link to activate your account:<br/> <a href='http://localhost:8080/fazada/activate?userName="
-						+ username + "'>Activate your account</a>", "UTF-8", "html");
+				messageBodyPart.setText(
+						"Hi " + username
+								+ ",<br/><br/>Your account has been registered on Fazada.<br/>Please click this link to activate your account:<br/> <a href='http://localhost:8080/fazada/activate?userName="
+								+ username + "'>Activate your account</a><br/><br/>Best regards,<br/><br/>Fazada team",
+						"UTF-8", "html");
 
 				// Create a multipar message
 				Multipart multipart = new MimeMultipart();
@@ -177,7 +178,7 @@ public class CustomMailHandler {
 				// Fill the message
 				messageBodyPart.setText(
 						"Your password has been resetted.<br/>The new password is: " + password
-								+ ".<br/>Please click <a href='http://localhost:8080/fazada/main'>this</a> to login to our site and change password.",
+								+ ".<br/>Please click <a href='http://localhost:8080/fazada/main'>this</a> to login to our site and change password.<br/><br/>Best regards,<br/><br/>Fazada team",
 						"UTF-8", "html");
 
 				// Create a multipar message

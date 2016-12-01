@@ -174,15 +174,13 @@ public class AccountServiceImpl implements AccountService {
 	 * @see com.spring.service.AccountService#addNewAccount(com.spring.entity.
 	 * Account, java.lang.String)
 	 */
-	public boolean addNewUser(Account input, String from, String to, int passSize) {
+	public boolean addNewUser(Account input, String from, String to) {
 		if (input != null) {
-			String enpass = randomPassword(passSize);
-			input.setPassword(encryptMD5(enpass));
 			input.setRole("user");
 			input.setActive(false);
 			boolean result = dao.addAccount(input);
 			if (result) {
-				mail.sendSignupMail(from, to, input.getUserName(), enpass);
+				mail.sendSignupMail(from, to, input.getUserName());
 			}
 			return result;
 		}

@@ -16,4 +16,8 @@ public interface OrderService {
 	public List<Order> getOrderByNumber(String orderId);
 
 	public List<Order> getOrderListByUserOrNumber(String searchValue);
+
+	public List<Order> getOrderListByUserAndTimeRange(String userName, Date date1, Date date2);
+	
+	public boolean updateStatusById(Integer orderId, Integer status) ;
 }

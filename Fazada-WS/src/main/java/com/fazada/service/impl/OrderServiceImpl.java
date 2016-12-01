@@ -45,4 +45,14 @@ public class OrderServiceImpl implements OrderService {
 	public List<Order> getOrderListByUserOrNumber(String searchValue) {
 		return dao.getOrderListByUserOrNumber(searchValue);
 	}
+
+	@Override
+	public List<Order> getOrderListByUserAndTimeRange(String userName, Date date1, Date date2) {
+		return dao.getOrderListByUserAndTimeRange(userName, date1, date2);
+	}
+
+	@Override
+	public boolean updateStatusById(Integer orderId, Integer status) {
+		return dao.updateStatusById(orderId, status);
+	}
 }

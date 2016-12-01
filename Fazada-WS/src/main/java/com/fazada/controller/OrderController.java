@@ -4,13 +4,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -87,5 +91,36 @@ public class OrderController {
 			throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(service.getOrderListByUserOrNumber(searchValue));
+	}
+
+	@RequestMapping(value = "/list/user/time", method = RequestMethod.POST, produces = "application/json")
+	public String getOrderListByUserAndTimeRange(@RequestBody String strJSON) throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		JSONObject json = new JSONObject(strJSON);
+		String userName = json.getString("userName");
+		Date date1 = null, date2 = null;
+		try {
+			date1 = tl.get().parse(json.getString("date1"));
+			date2 = tl.get().parse(json.getString("date2"));
+		} catch (ParseException e) {
+			return "";
+		}
+		return mapper.writeValueAsString(service.getOrderListByUserAndTimeRange(userName, date1, date2));
+	}
+
+	@RequestMapping(value = "/update/status/", method = RequestMethod.POST)
+	public ResponseEntity<String> updateStatus(@RequestBody String strJSON) throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		JSONObject json = new JSONObject(strJSON);
+		Integer id = json.getInt("orderId");
+		Integer status = json.getInt("orderStatus");
+		if (id != null && status != null) {
+			boolean result = service.updateStatusById(id, status);
+			if (result) {
+				return new ResponseEntity<>("Status updated!", HttpStatus.OK);
+			} else
+				return new ResponseEntity<>("Error in updating status!", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
 	}
 }

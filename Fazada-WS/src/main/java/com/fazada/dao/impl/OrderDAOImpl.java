@@ -44,7 +44,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		// Query with criteria object
 		Criteria criteria = session.createCriteria(Order.class, "ORDER");
 		criteria.createAlias("ORDER.account", "a");
-		criteria.add(Restrictions.like("a.userName", "%" + userName + "%"));
+		criteria.add(Restrictions.eq("a.userName", userName));
 		// Get result
 		List<Order> orders = criteria.list();
 		// Return null if none of above conditions are met
@@ -69,5 +69,35 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		query.setParameter("orderid", "%" + searchValue + "%");
 		query.setParameter("userName", "%" + searchValue + "%");
 		return query.getResultList();
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public List<Order> getOrderListByUserAndTimeRange(String userName, Date d1, Date d2) {
+		// Get current session
+		Session session = sessionFactory.getCurrentSession();
+		// Query with criteria object
+		Criteria criteria = session.createCriteria(Order.class, "ORDER");
+		criteria.createAlias("ORDER.account", "a");
+		criteria.add(Restrictions.eq("a.userName", userName));
+		criteria.add(Restrictions.ge("dateTime", d1));
+		criteria.add(Restrictions.le("dateTime", d2));
+		// Get result
+		List<Order> orders = criteria.list();
+		// Return null if none of above conditions are met
+		return orders;
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public boolean updateStatusById(Integer orderId, Integer status) {
+		Session session = sessionFactory.getCurrentSession();
+		Query<Order> query = session.createQuery("Update Order o SET orderstatus = :status WHERE orderId = :orderid");
+		query.setParameter("orderid", orderId);
+		query.setParameter("status", status);
+		if (query.executeUpdate() == 1) {
+			return true;
+		} else
+			return false;
 	}
 }

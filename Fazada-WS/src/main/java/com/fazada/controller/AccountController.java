@@ -172,7 +172,7 @@ public class AccountController {
 	public ResponseEntity<String> signupAccount(@RequestBody Account account) {
 		try {
 			// Add account and get result
-			boolean result = service.addNewUser(account, "minhhuan@test.com", account.getEmail(), 9);
+			boolean result = service.addNewUser(account, "minhhuan@test.com", account.getEmail());
 			// Check if the operation is successful
 			if (result) {
 				// Return message
