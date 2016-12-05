@@ -2,37 +2,21 @@ package com.fazada.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("")
 public class WebController {
-
-	/**
-	 * Log4j logger
-	 */
-	private static Logger logger = Logger.getLogger(WebController.class.getName());
 
 	/**
 	 * A thread-safe method to store SimpleDateFormat
@@ -112,16 +96,22 @@ public class WebController {
 		// Redirect to home page
 		return "order";
 	}
-	
+
 	@RequestMapping(value = "/account/info", method = RequestMethod.GET)
 	public String getAccountInfoPage() {
 		// Redirect to home page
 		return "info";
 	}
-	
+
 	@RequestMapping(value = "/account/order", method = RequestMethod.GET)
 	public String getMyOrderPage() {
 		// Redirect to home page
 		return "myOrder";
+	}
+
+	@RequestMapping(value = "/activate", method = RequestMethod.GET)
+	public String getActivePage() {
+		// Redirect to home page
+		return "activate";
 	}
 }

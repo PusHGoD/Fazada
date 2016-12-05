@@ -1,361 +1,297 @@
-$(document)
-		.ready(
-				function() {
-					var trigger = $('.hamburger'), overlay = $('.overlay'), isClosed = false;
+$(function() {
+	/* Side bar functions */
+	var trigger = $('.hamburger'), overlay = $('.overlay'), isClosed = false;
 
-					trigger.click(function() {
-						hamburger_cross();
-					});
+	trigger.click(function() {
+		hamburger_cross();
+	});
 
-					function hamburger_cross() {
+	function hamburger_cross() {
 
-						if (isClosed == true) {
-							overlay.hide();
-							trigger.removeClass('is-open');
-							trigger.addClass('is-closed');
-							isClosed = false;
-						} else {
-							overlay.show();
-							trigger.removeClass('is-closed');
-							trigger.addClass('is-open');
-							isClosed = true;
-						}
+		if (isClosed == true) {
+			overlay.hide();
+			trigger.removeClass('is-open');
+			trigger.addClass('is-closed');
+			isClosed = false;
+		} else {
+			overlay.show();
+			trigger.removeClass('is-closed');
+			trigger.addClass('is-open');
+			isClosed = true;
+		}
+	}
+
+	$('[data-toggle="offcanvas"]').click(function() {
+		$('#wrapper').toggleClass('toggled');
+	});
+
+	/* Page functions */
+	if ($('body').is('#user-management-page')) {
+		$(loadUserList);
+	}
+	if ($('body').is('#order-management-page')) {
+		$(loadOrderList);
+		var currentYear = new Date().getFullYear();
+		$('#order-select').append($('<option>', {
+			value : currentYear,
+			text : 'In ' + currentYear
+		}));
+	}
+
+	if ($('body').is('#my-order-page')) {
+		$(loadMyOrderList);
+		var currentYear = new Date().getFullYear();
+		$('#my-order-select').append($('<option>', {
+			value : currentYear,
+			text : 'In ' + currentYear
+		}));
+	}
+
+	if ($('body').is('#account-info-page')) {
+		$(loadInfo());
+	}
+
+	/* Client functions */
+	$("#order-select").change(function() {
+		var today = new Date();
+		var priorDate = new Date();
+		switch ($("#order-select").val()) {
+		case "All":
+			loadOrderList();
+			break;
+		case "In 15 days": {
+			priorDate.setDate(today.getDate() - 15);
+			loadOrderListWithRange(priorDate, today);
+			break;
+		}
+		case "In 30 days": {
+			priorDate.setDate(today.getDate() - 30);
+			loadOrderListWithRange(priorDate, today);
+			break;
+		}
+		case "In 3 months": {
+			priorDate.setMonth(today.getMonth() - 3);
+			loadOrderListWithRange(priorDate, today);
+			break;
+		}
+		case "In 6 months": {
+			priorDate.setMonth(today.getMonth() - 6);
+			loadOrderListWithRange(priorDate, today);
+			break;
+		}
+		default: {
+			if (/^\d+$/.test($("#order-select").val())) {
+				priorDate = new Date($("#order-select").val(), 0, 2);
+				loadOrderListWithRange(priorDate, today);
+			}
+			loadMyOrderListWithRange(priorDate, today);
+			break;
+		}
+		}
+	});
+
+	$("#my-order-select").change(function() {
+		var today = new Date();
+		var priorDate = new Date();
+		switch ($("#my-order-select").val()) {
+		case "All":
+			loadMyOrderList();
+			break;
+		case "In 15 days": {
+			priorDate.setDate(today.getDate() - 15);
+			loadMyOrderListWithRange(priorDate, today);
+			break;
+		}
+		case "In 30 days": {
+			priorDate.setDate(today.getDate() - 30);
+			loadMyOrderListWithRange(priorDate, today);
+			break;
+		}
+		case "In 3 months": {
+			priorDate.setMonth(today.getMonth() - 3);
+			loadMyOrderListWithRange(priorDate, today);
+			break;
+		}
+		case "In 6 months": {
+			priorDate.setMonth(today.getMonth() - 6);
+			loadMyOrderListWithRange(priorDate, today);
+			break;
+		}
+		default: {
+			if (/^\d+$/.test($("#order-select").val())) {
+				priorDate = new Date($("#order-select").val(), 0, 2);
+				loadMyOrderListWithRange(priorDate, today);
+			}
+
+			break;
+		}
+		}
+	});
+
+	var timer;
+
+	$("#searchForm").keyup(function() {
+		clearTimeout(timer);
+		timer = setTimeout(function(event) {
+			if ($("#search").val() == "") {
+				loadOrder();
+			} else {
+				searchOrderByUserNameOrOrderId($("#search").val());
+			}
+			$("#search").focus();
+		}, 500);
+
+	});
+
+	$("#loginForm").keypress(function(event) {
+		if (event.which == 13) {
+			event.preventDefault();
+			requestLogin();
+		}
+	});
+
+	$("#login-btn").click(requestLogin);
+
+	$("#signupForm").keypress(function(event) {
+		if (event.which == 13) {
+			event.preventDefault();
+			requestSignUp();
+		}
+	});
+
+	$("#signup-btn").click(requestSignUp);
+
+	$("#forgetForm").keypress(function(event) {
+		if (event.which == 13) {
+			event.preventDefault();
+			requestResetPassword();
+		}
+	});
+
+	$("#forget-btn").click(requestResetPassword)
+
+	$("#user-update-btn").click(function() {
+		if (checkUpdateInput()) {
+			$("#editForm").submit();
+		}
+	});
+
+	window.actionEvents = {
+		'click .edit' : function(e, value, row, index) {
+			if (row != null) {
+				$("#editModal").find("#id").val(row.id);
+				$("#editModal").find("#userName").val(row.userName);
+				$("#editModal").find("#firstName").val(row.firstName);
+				$("#editModal").find("#lastName").val(row.lastName);
+				$("#editModal").find("#dateOfBirth").val(
+						formatDate(row.dateOfBirth));
+				$("#editModal").find("#email").val(row.email);
+				if (row.active) {
+					$("#editModal").find("input[value='true']").prop('checked',
+							true);
+				} else {
+					$("#editModal").find("input[value='false']").prop(
+							'checked', true);
+				}
+			}
+		}
+	};
+
+	$("#editButton").click(
+			function() {
+				var acc = getSelectedRow();
+				if (acc != null) {
+					$("#editModal").find("#id").val(acc.id);
+					$("#editModal").find("#userName").val(acc.userName);
+					$("#editModal").find("#firstName").val(acc.firstName);
+					$("#editModal").find("#lastName").val(acc.lastName);
+					$("#editModal").find("#dateOfBirth").val(
+							formatDate(acc.dateOfBirth));
+					$("#editModal").find("#email").val(acc.email);
+					if (acc.active) {
+						$("#editModal").find("input[value='true']").prop(
+								'checked', true);
+					} else {
+						$("#editModal").find("input[value='false']").prop(
+								'checked', true);
 					}
+				} else {
+					$("#editButton").prop('disabled', true);
+				}
+			});
 
-					if ($('body').is('#user-management-page')) {
-						$(loadUserList);
-					}
-					if ($('body').is('#order-management-page')) {
-						$(loadOrderList);
-						var currentYear = new Date().getFullYear();
-						$('#order-select').append($('<option>', {
-							value : currentYear,
-							text : 'In ' + currentYear
-						}));
-					}
+	$("#manager-add-btn").click(function() {
+		if (checkManagementInput($("#addModal"))) {
+			var data = $("#addModal").find("#addForm").serializeArray();
+			var json = convertArrayToJSON(data);
+			$.ajax({
+				url : 'http://localhost:8080/fazadaws/account/add',
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "text",
+				data : JSON.stringify(json),
+				success : function(response) {
+					loadUser();
+					$("#addModal").find("#addForm").trigger("reset");
+					showAJAXSuccessMessage(response);
+				},
+				error : function(data, message, xhr) {
+					showAJAXErrorMessage(data.responseText);
+				}
+			});
+			$("#addModal").modal("hide");
+		}
+	});
 
-					if ($('body').is('#my-order-page')) {
-						$(loadMyOrderList);
-						var currentYear = new Date().getFullYear();
-						$('#my-order-select').append($('<option>', {
-							value : currentYear,
-							text : 'In ' + currentYear
-						}));
-					}
+	$("#manager-edit-btn").click(function() {
+		if (checkUpdateUser($("#editModal"))) {
+			var data = $("#editModal").find("#editForm").serializeArray();
+			var json = convertArrayToJSON(data);
+			$.ajax({
+				url : 'http://localhost:8080/fazadaws/account/edit',
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "text",
+				data : JSON.stringify(json),
+				success : function(response) {
+					loadUser();
+					showAJAXSuccessMessage(response);
+				},
+				error : function(data, message, xhr) {
+					showAJAXErrorMessage(data.responseText);
+				}
 
-					if ($('body').is('#account-info-page')) {
-						$(loadInfo());
-					}
+			});
+			$("#editModal").modal("hide");
+		}
+	});
 
-					$('[data-toggle="offcanvas"]').click(function() {
-						$('#wrapper').toggleClass('toggled');
-					});
+	$("#password-change-btn").click(function() {
+		if (checkChangePassword()) {
+			var data = $("#changePassForm").serializeArray();
+			var json = convertArrayToJSON(data);
+			$.ajax({
+				url : "http://localhost:8080/fazadaws/account/changePassword",
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "text",
+				data : JSON.stringify(json),
+				success : function(response) {
+					showAJAXSuccessMessage(response);
+				},
+				error : function(data, message, xhr) {
+					showAJAXErrorMessage(data.responseText);
+				}
+			});
+			$("#changePassForm").trigger("reset");
+		}
+	});
 
-					$("#order-select")
-							.change(
-									function() {
-										var today = new Date();
-										var priorDate = new Date();
-										switch ($("#order-select").val()) {
-										case "All":
-											loadOrderList();
-											break;
-										case "In 15 days": {
-											priorDate
-													.setDate(today.getDate() - 15);
-											loadOrderListWithRange(priorDate,
-													today);
-											break;
-										}
-										case "In 30 days": {
-											priorDate
-													.setDate(today.getDate() - 30);
-											loadOrderListWithRange(priorDate,
-													today);
-											break;
-										}
-										case "In 3 months": {
-											priorDate
-													.setMonth(today.getMonth() - 3);
-											loadOrderListWithRange(priorDate,
-													today);
-											break;
-										}
-										case "In 6 months": {
-											priorDate
-													.setMonth(today.getMonth() - 6);
-											loadOrderListWithRange(priorDate,
-													today);
-											break;
-										}
-										default: {
-											if (/^\d+$/.test($("#order-select")
-													.val())) {
-												priorDate = new Date($(
-														"#order-select").val(),
-														0, 2);
-												loadOrderListWithRange(
-														priorDate, today);
-											}
-											loadMyOrderListWithRange(priorDate,
-													today);
-											break;
-										}
-										}
-									});
-
-					$("#my-order-select")
-							.change(
-									function() {
-										var today = new Date();
-										var priorDate = new Date();
-										switch ($("#my-order-select").val()) {
-										case "All":
-											loadMyOrderList();
-											break;
-										case "In 15 days": {
-											priorDate
-													.setDate(today.getDate() - 15);
-											loadMyOrderListWithRange(priorDate,
-													today);
-											break;
-										}
-										case "In 30 days": {
-											priorDate
-													.setDate(today.getDate() - 30);
-											loadMyOrderListWithRange(priorDate,
-													today);
-											break;
-										}
-										case "In 3 months": {
-											priorDate
-													.setMonth(today.getMonth() - 3);
-											loadMyOrderListWithRange(priorDate,
-													today);
-											break;
-										}
-										case "In 6 months": {
-											priorDate
-													.setMonth(today.getMonth() - 6);
-											loadMyOrderListWithRange(priorDate,
-													today);
-											break;
-										}
-										default: {
-											if (/^\d+$/.test($("#order-select")
-													.val())) {
-												priorDate = new Date($(
-														"#order-select").val(),
-														0, 2);
-												loadMyOrderListWithRange(
-														priorDate, today);
-											}
-
-											break;
-										}
-										}
-									});
-					var timer;
-
-					$("#searchForm").keyup(
-							function() {
-								clearTimeout(timer);
-								timer = setTimeout(function(event) {
-									if ($("#search").val() == "") {
-										loadOrder();
-									} else {
-										searchOrderByUserNameOrOrderId($(
-												"#search").val());
-									}
-									$("#search").focus();
-								}, 500);
-
-							});
-
-					$("#loginForm").keypress(function(event) {
-						if (event.which == 13) {
-							event.preventDefault();
-							requestLogin();
-						}
-					});
-
-					$("#login-btn").click(requestLogin);
-
-					$("#signupForm").keypress(function(event) {
-						if (event.which == 13) {
-							event.preventDefault();
-							requestSignUp();
-						}
-					});
-
-					$("#signup-btn").click(requestSignUp);
-
-					$("#forgetForm").keypress(function(event) {
-						if (event.which == 13) {
-							event.preventDefault();
-							requestResetPassword();
-						}
-					});
-
-					$("#forget-btn").click(requestResetPassword)
-
-					$("#user-update-btn").click(function() {
-						if (checkUpdateInput()) {
-							$("#editForm").submit();
-						}
-					});
-
-					window.actionEvents = {
-						'click .edit' : function(e, value, row, index) {
-							if (row != null) {
-								$("#editModal").find("#id").val(row.id);
-								$("#editModal").find("#userName").val(
-										row.userName);
-								$("#editModal").find("#firstName").val(
-										row.firstName);
-								$("#editModal").find("#lastName").val(
-										row.lastName);
-								$("#editModal").find("#dateOfBirth").val(
-										formatDate(row.dateOfBirth));
-								$("#editModal").find("#email").val(row.email);
-								if (row.active) {
-									$("#editModal").find("input[value='true']")
-											.prop('checked', true);
-								} else {
-									$("#editModal")
-											.find("input[value='false']").prop(
-													'checked', true);
-								}
-							}
-						}
-					};
-
-					$("#editButton").click(
-							function() {
-								var acc = getSelectedRow();
-								if (acc != null) {
-									$("#editModal").find("#id").val(acc.id);
-									$("#editModal").find("#userName").val(
-											acc.userName);
-									$("#editModal").find("#firstName").val(
-											acc.firstName);
-									$("#editModal").find("#lastName").val(
-											acc.lastName);
-									$("#editModal").find("#dateOfBirth").val(
-											formatDate(acc.dateOfBirth));
-									$("#editModal").find("#email").val(
-											acc.email);
-									if (acc.active) {
-										$("#editModal").find(
-												"input[value='true']").prop(
-												'checked', true);
-									} else {
-										$("#editModal").find(
-												"input[value='false']").prop(
-												'checked', true);
-									}
-								} else {
-									$("#editButton").prop('disabled', true);
-								}
-							});
-
-					$("#manager-add-btn")
-							.click(
-									function() {
-										if (checkManagementInput($("#addModal"))) {
-											var data = $("#addModal").find(
-													"#addForm")
-													.serializeArray();
-											var json = convertArrayToJSON(data);
-											$
-													.ajax({
-														url : 'http://localhost:8080/fazadaws/account/add',
-														type : "POST",
-														contentType : "application/json; charset=utf-8",
-														dataType : "text",
-														data : JSON
-																.stringify(json),
-														success : function(
-																response) {
-															loadUser();
-															showAJAXSuccessMessage(response);
-														},
-														error : function(data,
-																message, xhr) {
-															showAJAXErrorMessage(data.responseText);
-														}
-													});
-											$("#addModal").modal("hide");
-										}
-									});
-
-					$("#manager-edit-btn")
-							.click(
-									function() {
-										if (checkUpdateUser($("#editModal"))) {
-											var data = $("#editModal").find(
-													"#editForm")
-													.serializeArray();
-											var json = convertArrayToJSON(data);
-											$
-													.ajax({
-														url : 'http://localhost:8080/fazadaws/account/edit',
-														type : "POST",
-														contentType : "application/json; charset=utf-8",
-														dataType : "text",
-														data : JSON
-																.stringify(json),
-														success : function(
-																response) {
-															loadUser();
-															showAJAXSuccessMessage(response);
-														},
-														error : function(data,
-																message, xhr) {
-															showAJAXErrorMessage(data.responseText);
-														}
-
-													});
-											$("#editModal").modal("hide");
-										}
-									});
-
-					$("#password-change-btn")
-							.click(
-									function() {
-										if (checkChangePassword()) {
-											var data = $("#changePassForm")
-													.serializeArray();
-											var json = convertArrayToJSON(data);
-											$
-													.ajax({
-														url : "http://localhost:8080/fazadaws/account/changePassword",
-														type : "POST",
-														contentType : "application/json; charset=utf-8",
-														dataType : "text",
-														data : JSON
-																.stringify(json),
-														success : function(
-																response) {
-															showAJAXSuccessMessage(response);
-														},
-														error : function(data,
-																message, xhr) {
-															showAJAXErrorMessage(data.responseText);
-														}
-
-													});
-											$("#old_password").val("");
-											$("#new_password").val("");
-											$("#confirm").val("");
-										}
-									});
-
-					$(".submenu").click(function() {
-						$("#submenu").find(".submenu").removeClass("active");
-						$(this).addClass("active");
-					})
-				});
+	$(".submenu").click(function() {
+		$("#submenu").find(".submenu").removeClass("active");
+		$(this).addClass("active");
+	})
+});
 
 /* Normal AJAX functions */
 function requestLogin() {
@@ -403,6 +339,7 @@ function requestSignUp() {
 			dataType : "text",
 			data : JSON.stringify(json),
 			success : function(response) {
+				$('#signupForm').trigger("reset");
 				showAJAXSuccessMessage(response);
 			},
 			error : function(data, message, xhr) {
@@ -430,6 +367,7 @@ function requestResetPassword() {
 			dataType : "text",
 			data : data,
 			success : function(response) {
+				$('#forgetForm').trigger("reset");
 				showAJAXSuccessMessage(response);
 			},
 			error : function(data, message, xhr) {
@@ -455,7 +393,7 @@ function searchOrderByUserNameOrOrderId(value) {
 		error : function() {
 			showAJAXErrorMessage('Error in loading data');
 		}
-	})
+	});
 }
 
 /* Convert Array To JSON */
@@ -628,7 +566,7 @@ function loadInfo() {
 				error : function(response) {
 					showAJAXErrorMessage(response);
 				}
-			})
+			});
 }
 /* Get selected row */
 function getSelectedRow() {
@@ -690,7 +628,7 @@ function statusFormatter(value, row, index) {
 	case 1:
 		return "Shipping";
 	case 2:
-		return "Shipped";
+		return "Done";
 	default:
 		return "Invalid status";
 	}
