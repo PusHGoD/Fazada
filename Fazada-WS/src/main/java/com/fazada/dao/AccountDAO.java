@@ -80,4 +80,10 @@ public interface AccountDAO {
 	 * @return update result
 	 */
 	public boolean updatePasswordByEmail(String email, String password);
+	
+	/**
+	 * @param userName
+	 * @return update result
+	 */
+	public boolean updateStatusByUserName(String userName);
 }

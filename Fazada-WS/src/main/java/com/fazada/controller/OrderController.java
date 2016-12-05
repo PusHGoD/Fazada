@@ -7,8 +7,6 @@ import java.util.Date;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
@@ -108,9 +106,8 @@ public class OrderController {
 		return mapper.writeValueAsString(service.getOrderListByUserAndTimeRange(userName, date1, date2));
 	}
 
-	@RequestMapping(value = "/update/status/", method = RequestMethod.POST)
+	@RequestMapping(value = "/update/status", method = RequestMethod.POST)
 	public ResponseEntity<String> updateStatus(@RequestBody String strJSON) throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
 		JSONObject json = new JSONObject(strJSON);
 		Integer id = json.getInt("orderId");
 		Integer status = json.getInt("orderStatus");

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -13,15 +12,12 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -202,18 +198,24 @@ public class AccountController {
 			if (checkResult != null) {
 				switch (checkResult.getKey()) {
 				case 0:
-					return new ResponseEntity<String>("Please check your password!", HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<String>("Your password does not match with current password!",
+							HttpStatus.BAD_REQUEST);
 				case 1: {
-					// Reset password and get result
-					boolean result = service.changePassword(account);
-					// Check if update operation is successful
-					if (result) {
-						// Return message
-						return new ResponseEntity<String>("Your password has been changed!", HttpStatus.OK);
+					if (oldPassword.equals(account.getPassword())) {
+						return new ResponseEntity<String>("New password must not be the same as current one!",
+								HttpStatus.NOT_ACCEPTABLE);
 					} else {
-						// Return message
-						return new ResponseEntity<String>("Error in changing password!",
-								HttpStatus.INTERNAL_SERVER_ERROR);
+						// Reset password and get result
+						boolean result = service.changePassword(account);
+						// Check if update operation is successful
+						if (result) {
+							// Return message
+							return new ResponseEntity<String>("Your password has been changed!", HttpStatus.OK);
+						} else {
+							// Return message
+							return new ResponseEntity<String>("Error in changing password!",
+									HttpStatus.INTERNAL_SERVER_ERROR);
+						}
 					}
 				}
 				case 2: {
@@ -276,5 +278,14 @@ public class AccountController {
 		// Convert list into JSON type
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(list);
+	}
+
+	@RequestMapping(value = "/activate/{userName}", method = RequestMethod.POST)
+	public ResponseEntity<String> activateAccount(@PathVariable("userName") String userName) {
+		boolean result = service.updateStatusByUserName(userName);
+		if (result) {
+			return new ResponseEntity<String>("You have activated your account", HttpStatus.OK);
+		} else
+			return new ResponseEntity<String>("No account found!", HttpStatus.NOT_FOUND);
 	}
 }

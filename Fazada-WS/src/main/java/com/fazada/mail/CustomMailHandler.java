@@ -2,7 +2,6 @@ package com.fazada.mail;
 
 import java.util.Properties;
 
-import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;

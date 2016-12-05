@@ -5,11 +5,13 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fazada.dao.AccountDAO;
 import com.fazada.model.Account;
+import com.fazada.model.Order;
 
 /**
  * @author HuanPM Implementation of account DAO
@@ -241,5 +243,24 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 			}
 		}
 		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.fazada.dao.AccountDAO#updateStatusByUserName(java.lang.String)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public boolean updateStatusByUserName(String userName) {
+		if (userName != null) {
+			Session session = sessionFactory.getCurrentSession();
+			Query<Order> query = session.createQuery("Update Account SET active = :active WHERE userName = :userName");
+			query.setParameter("userName", userName);
+			query.setParameter("active", Boolean.TRUE);
+			if (query.executeUpdate() == 1) {
+				return true;
+			} else
+				return false;
+		} else
+			return false;
 	}
 }

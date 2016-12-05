@@ -236,4 +236,18 @@ public class AccountServiceImpl implements AccountService {
 		}
 		return false;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fazada.service.AccountService#updateStatusByUserName(java.lang.
+	 * String)
+	 */
+	public boolean updateStatusByUserName(String userName) {
+		if (userName != null) {
+			boolean result = dao.updateStatusByUserName(userName);
+			return result;
+		}
+		return false;
+	}
 }

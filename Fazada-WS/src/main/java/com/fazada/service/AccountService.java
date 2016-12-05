@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.springframework.stereotype.Service;
 import com.fazada.model.Account;
 
 /**
@@ -84,4 +83,10 @@ public interface AccountService {
 	 * @return
 	 */
 	public boolean resetPasswordByEmail(String input, String from);
+	
+	/**
+	 * @param userName
+	 * @return
+	 */
+	public boolean updateStatusByUserName(String userName);
 }
