@@ -73,6 +73,7 @@ public class AccountServiceImpl implements AccountService {
 	 * @see com.spring.service.AccountService#checkLogin(java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	public Entry<Integer, Account> checkLogin(String username, String password) {
 		Entry<Integer, Account> result = null;
 		// Call to DAO and get account information
@@ -99,6 +100,7 @@ public class AccountServiceImpl implements AccountService {
 	 * com.spring.service.AccountService#updateAccountInfo(com.spring.entity.
 	 * Account, java.lang.String)
 	 */
+	@Override
 	public boolean updateAccountInfo(Account input) {
 		if (input != null) {
 			// Update and return result
@@ -113,6 +115,7 @@ public class AccountServiceImpl implements AccountService {
 	 * @see
 	 * com.fazada.service.AccountService#getAccountByUserName(java.lang.String)
 	 */
+	@Override
 	public Account getAccountByUserName(String userName) {
 		return dao.findByUsername(userName);
 	}
@@ -122,6 +125,7 @@ public class AccountServiceImpl implements AccountService {
 	 * 
 	 * @see com.spring.service.AccountService#getAccountList()
 	 */
+	@Override
 	public List<Account> getAccountList() {
 		return dao.findAll();
 	}
@@ -153,6 +157,7 @@ public class AccountServiceImpl implements AccountService {
 	 * com.fazada.service.AccountService#addNewStaff(com.fazada.model.Account,
 	 * java.lang.String, java.lang.String, int)
 	 */
+	@Override
 	public boolean addNewStaff(Account input, String from, String to, int passSize) {
 		if (input != null) {
 			String enpass = randomPassword(passSize);
@@ -174,8 +179,10 @@ public class AccountServiceImpl implements AccountService {
 	 * @see com.spring.service.AccountService#addNewAccount(com.spring.entity.
 	 * Account, java.lang.String)
 	 */
+	@Override
 	public boolean addNewUser(Account input, String from, String to) {
 		if (input != null) {
+			input.setPassword(encryptMD5(input.getPassword()));
 			input.setRole("user");
 			input.setActive(false);
 			boolean result = dao.addAccount(input);
@@ -193,6 +200,7 @@ public class AccountServiceImpl implements AccountService {
 	 * @see com.fazada.service.AccountService#changePassword(com.fazada.model.
 	 * Account)
 	 */
+	@Override
 	public boolean changePassword(Account input) {
 		if (input != null) {
 			return dao.updatePassword(input.getUserName(), encryptMD5(input.getPassword()));
@@ -206,6 +214,7 @@ public class AccountServiceImpl implements AccountService {
 	 * @see com.spring.service.AccountService#resetPassword(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
+	@Override
 	public boolean resetPassword(Account input, String from, String to) {
 		if (input != null && from != null && to != null) {
 			String password = randomPassword(9);
@@ -225,6 +234,7 @@ public class AccountServiceImpl implements AccountService {
 	 * com.fazada.service.AccountService#resetPasswordByEmail(java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	public boolean resetPasswordByEmail(String input, String from) {
 		if (input != null && from != null) {
 			String password = randomPassword(9);
@@ -243,6 +253,7 @@ public class AccountServiceImpl implements AccountService {
 	 * @see com.fazada.service.AccountService#updateStatusByUserName(java.lang.
 	 * String)
 	 */
+	@Override
 	public boolean updateStatusByUserName(String userName) {
 		if (userName != null) {
 			boolean result = dao.updateStatusByUserName(userName);

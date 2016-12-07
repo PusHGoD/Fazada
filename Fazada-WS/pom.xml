@@ -7,7 +7,7 @@
 	<packaging>war</packaging>
 	<properties>
 		<spring.version>4.3.3.RELEASE</spring.version>
-		<hibernate.version>5.2.3.Final</hibernate.version>
+		<hibernate.version>5.2.5.Final</hibernate.version>
 		<dbh2.version>1.4.192</dbh2.version>
 	</properties>
 	<dependencies>

@@ -51,4 +51,10 @@ public interface OrderService {
 	 * @return
 	 */
 	public boolean updateStatusById(Integer orderId, Integer status) ;
+	
+	/**
+	 * @param order
+	 * @return
+	 */
+	public boolean addOrder(Order order);
 }

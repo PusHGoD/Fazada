@@ -24,6 +24,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * @see com.spring.dao.AccountDAO#checkLogin(java.lang.String,
 	 * java.lang.String)
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Account findByUserNameAndPassword(String username, String password) {
@@ -44,6 +45,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * @see com.fazada.dao.AccountDAO#findByEmailAndPassword(java.lang.String,
 	 * java.lang.String)
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Account findByEmailAndPassword(String email, String password) {
@@ -63,6 +65,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * 
 	 * @see com.fazada.dao.AccountDAO#findByEmail(java.lang.String)
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Account findByEmail(String email) {
@@ -96,6 +99,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * 
 	 * @see com.fazada.dao.AccountDAO#findByUsername(java.lang.String)
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Account findByUsername(String userName) {
@@ -162,6 +166,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * 
 	 * @see com.fazada.dao.AccountDAO#findAllStaff()
 	 */
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Account> findAllStaff() {
@@ -180,6 +185,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	 * 
 	 * @see com.fazada.dao.AccountDAO#findAllUser()
 	 */
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Account> findAllUser() {
@@ -248,6 +254,7 @@ public class AccountDAOImpl extends GenericDAOImpl<Integer, Account> implements 
 	/* (non-Javadoc)
 	 * @see com.fazada.dao.AccountDAO#updateStatusByUserName(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean updateStatusByUserName(String userName) {

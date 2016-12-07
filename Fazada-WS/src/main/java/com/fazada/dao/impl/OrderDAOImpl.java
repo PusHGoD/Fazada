@@ -21,6 +21,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		return this.find();
 	}
 
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Order> getOrderListByTimeRange(Date d1, Date d2) {
@@ -36,6 +37,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		return orders;
 	}
 
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Order> getOrderListByUser(String userName) {
@@ -51,6 +53,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		return orders;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Order> getOrderByNumber(String orderId) {
@@ -60,6 +63,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		return query.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Order> getOrderListByUserOrNumber(String searchValue) {
@@ -71,6 +75,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		return query.getResultList();
 	}
 
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Order> getOrderListByUserAndTimeRange(String userName, Date d1, Date d2) {
@@ -88,6 +93,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 		return orders;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean updateStatusById(Integer orderId, Integer status) {
@@ -99,5 +105,17 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 			return true;
 		} else
 			return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.fazada.dao.OrderDAO#addOrder(com.fazada.model.Order)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public boolean addOrder(Order order) {
+		if (order != null) {
+			return this.add(order);
+		}
+		return false;
 	}
 }

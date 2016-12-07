@@ -63,7 +63,7 @@ public class AccountController {
 			case 2: {
 				// Redirect to login page
 				return new ResponseEntity<String>(
-						"Your account is currently inactive. Please contact support for more information.",
+						"Your account is not activated. Please look up your email for a activation link.",
 						HttpStatus.BAD_REQUEST);
 			}
 			default: {
@@ -108,6 +108,10 @@ public class AccountController {
 		}
 	}
 
+	/**
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=*/*", produces = "application/json")
 	public String loadAccountList() throws JsonProcessingException {
 		// Get list
@@ -117,6 +121,10 @@ public class AccountController {
 		return mapper.writeValueAsString(list);
 	}
 
+	/**
+	 * @param account
+	 * @return
+	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseEntity<String> addStaff(@RequestBody Account account) {
 		try {
@@ -164,6 +172,10 @@ public class AccountController {
 		return new ResponseEntity<String>("Error occurred in DB processing", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	/**
+	 * @param account
+	 * @return
+	 */
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ResponseEntity<String> signupAccount(@RequestBody Account account) {
 		try {
@@ -186,6 +198,11 @@ public class AccountController {
 		return new ResponseEntity<String>("Error occurred in DB processing", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	/**
+	 * @param jsonStr
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
 	public ResponseEntity<String> changePassword(@RequestBody String jsonStr, HttpServletResponse response) {
 		try {
@@ -271,6 +288,11 @@ public class AccountController {
 		return new ResponseEntity<String>("Error occurred in DB processing", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	/**
+	 * @param userName
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "/info/{userName}", method = RequestMethod.GET, headers = "Accept=*/*", produces = "application/json")
 	public String getAccountInfo(@PathVariable("userName") String userName) throws JsonProcessingException {
 		// Get list
@@ -280,12 +302,16 @@ public class AccountController {
 		return mapper.writeValueAsString(list);
 	}
 
+	/**
+	 * @param userName
+	 * @return
+	 */
 	@RequestMapping(value = "/activate/{userName}", method = RequestMethod.POST)
 	public ResponseEntity<String> activateAccount(@PathVariable("userName") String userName) {
 		boolean result = service.updateStatusByUserName(userName);
 		if (result) {
 			return new ResponseEntity<String>("You have activated your account", HttpStatus.OK);
 		} else
-			return new ResponseEntity<String>("No account found!", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Account name not found!", HttpStatus.NOT_FOUND);
 	}
 }

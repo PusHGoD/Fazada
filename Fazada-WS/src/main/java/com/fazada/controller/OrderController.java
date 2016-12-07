@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fazada.model.Order;
 import com.fazada.service.OrderService;
 
 @RestController
@@ -43,7 +44,7 @@ public class OrderController {
 	};
 
 	/**
-	 * register property editors
+	 * @param binder
 	 */
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -52,12 +53,22 @@ public class OrderController {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
 	}
 
+	/**
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
 	public String getOrderList() throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(service.getOrderList());
 	}
 
+	/**
+	 * @param d1
+	 * @param d2
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "/list/time/{date1},{date2}", method = RequestMethod.GET, produces = "application/json")
 	public String getOrderListByTimeRange(@PathVariable("date1") String d1, @PathVariable("date2") String d2)
 			throws JsonProcessingException {
@@ -72,18 +83,33 @@ public class OrderController {
 		return mapper.writeValueAsString(service.getOrderListByTimeRange(date1, date2));
 	}
 
+	/**
+	 * @param userName
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "/list/user/{user}", method = RequestMethod.GET, produces = "application/json")
 	public String getOrderListByUser(@PathVariable("user") String userName) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(service.getOrderListByUser(userName));
 	}
 
+	/**
+	 * @param orderId
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "/list/order/{order}", method = RequestMethod.GET, produces = "application/json")
 	public String getOrderByNumber(@PathVariable("order") String orderId) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(service.getOrderByNumber(orderId));
 	}
 
+	/**
+	 * @param searchValue
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "/list/search/{search}", method = RequestMethod.GET, produces = "application/json")
 	public String getOrderListByUserOrNumber(@PathVariable("search") String searchValue)
 			throws JsonProcessingException {
@@ -91,6 +117,11 @@ public class OrderController {
 		return mapper.writeValueAsString(service.getOrderListByUserOrNumber(searchValue));
 	}
 
+	/**
+	 * @param strJSON
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "/list/user/time", method = RequestMethod.POST, produces = "application/json")
 	public String getOrderListByUserAndTimeRange(@RequestBody String strJSON) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -106,6 +137,11 @@ public class OrderController {
 		return mapper.writeValueAsString(service.getOrderListByUserAndTimeRange(userName, date1, date2));
 	}
 
+	/**
+	 * @param strJSON
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "/update/status", method = RequestMethod.POST)
 	public ResponseEntity<String> updateStatus(@RequestBody String strJSON) throws JsonProcessingException {
 		JSONObject json = new JSONObject(strJSON);
@@ -115,6 +151,23 @@ public class OrderController {
 			boolean result = service.updateStatusById(id, status);
 			if (result) {
 				return new ResponseEntity<>("Status updated!", HttpStatus.OK);
+			} else
+				return new ResponseEntity<>("Error in updating status!", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
+	}
+	
+	/**
+	 * @param strJSON
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	@RequestMapping(value = "/import/json", method = RequestMethod.POST)
+	public ResponseEntity<String> importOrderByJSON(@RequestBody Order order) throws JsonProcessingException {
+		if (order != null) {
+			boolean result = service.addOrder(order);
+			if (result) {
+				return new ResponseEntity<>("Order imported!", HttpStatus.OK);
 			} else
 				return new ResponseEntity<>("Error in updating status!", HttpStatus.INTERNAL_SERVER_ERROR);
 		}

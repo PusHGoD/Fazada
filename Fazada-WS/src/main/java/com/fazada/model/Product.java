@@ -1,5 +1,5 @@
 package com.fazada.model;
-// Generated Nov 16, 2016 3:15:51 PM by Hibernate Tools 5.2.0.Beta1
+// Generated Dec 6, 2016 10:51:08 AM by Hibernate Tools 5.2.0.Beta1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,9 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -20,8 +23,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Product implements java.io.Serializable {
 
 	private int productId;
+	private Brand brand;
 	private String productName;
-	private String brand;
 	private int price;
 	private boolean status;
 	private Set<Orderdetail> orderdetails = new HashSet<Orderdetail>(0);
@@ -29,18 +32,19 @@ public class Product implements java.io.Serializable {
 	public Product() {
 	}
 
-	public Product(int productId, String productName, int price, boolean status) {
+	public Product(int productId, Brand brand, String productName, int price, boolean status) {
 		this.productId = productId;
+		this.brand = brand;
 		this.productName = productName;
 		this.price = price;
 		this.status = status;
 	}
 
-	public Product(int productId, String productName, String brand, int price, boolean status,
+	public Product(int productId, Brand brand, String productName, int price, boolean status,
 			Set<Orderdetail> orderdetails) {
 		this.productId = productId;
-		this.productName = productName;
 		this.brand = brand;
+		this.productName = productName;
 		this.price = price;
 		this.status = status;
 		this.orderdetails = orderdetails;
@@ -57,6 +61,16 @@ public class Product implements java.io.Serializable {
 		this.productId = productId;
 	}
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "brand_id", nullable = false)
+	public Brand getBrand() {
+		return this.brand;
+	}
+
+	public void setBrand(Brand brand) {
+		this.brand = brand;
+	}
+
 	@Column(name = "productName", nullable = false, length = 45)
 	public String getProductName() {
 		return this.productName;
@@ -64,15 +78,6 @@ public class Product implements java.io.Serializable {
 
 	public void setProductName(String productName) {
 		this.productName = productName;
-	}
-
-	@Column(name = "brand", length = 45)
-	public String getBrand() {
-		return this.brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand;
 	}
 
 	@Column(name = "price", nullable = false)
@@ -94,7 +99,7 @@ public class Product implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
-	@JsonManagedReference(value="orderdetails-product")
+	@JsonBackReference(value="orderdetails-product")
 	public Set<Orderdetail> getOrderdetails() {
 		return this.orderdetails;
 	}

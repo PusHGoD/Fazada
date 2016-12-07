@@ -48,6 +48,7 @@
 				<value>com.fazada.model.Orderdetail</value>
 				<value>com.fazada.model.OrderdetailId</value>
 				<value>com.fazada.model.Product</value>
+				<value>com.fazada.model.Brand</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

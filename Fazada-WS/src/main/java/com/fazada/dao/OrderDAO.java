@@ -20,4 +20,6 @@ public interface OrderDAO {
 	public List<Order> getOrderListByUserAndTimeRange(String userName, Date d1, Date d2);
 
 	public boolean updateStatusById(Integer orderId, Integer status);
+	
+	public boolean addOrder(Order order);
 }

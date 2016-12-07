@@ -32,6 +32,7 @@ public class GenericDAOImpl<K extends Serializable, E> implements GenericDAO<K, 
 	/**
 	 * @return Class object of E
 	 */
+	@SuppressWarnings("unchecked")
 	private Class<E> getGenericType() {
 		// Resolve type of arguments (K,E)
 		Class<?>[] typeArgs = GenericTypeResolver.resolveTypeArguments(this.getClass(), GenericDAO.class);
@@ -44,6 +45,7 @@ public class GenericDAOImpl<K extends Serializable, E> implements GenericDAO<K, 
 	 * 
 	 * @see com.spring.dao.GenericDAO#find()
 	 */
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<E> find() {
 		// Get current session

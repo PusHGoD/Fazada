@@ -97,4 +97,12 @@ public class OrderServiceImpl implements OrderService {
 	public boolean updateStatusById(Integer orderId, Integer status) {
 		return dao.updateStatusById(orderId, status);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.fazada.service.OrderService#addOrder(com.fazada.model.Order)
+	 */
+	@Override
+	public boolean addOrder(Order order) {
+		return dao.addOrder(order);
+	}
 }
