@@ -26,15 +26,9 @@
 <link href="<c:url value='/Resources/css/main.css' />" rel="stylesheet" />
 <link
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-	rel="stylesheet">
+	rel="stylesheet" />
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/toolbar/bootstrap-table-toolbar.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/flat-json/bootstrap-table-flat-json.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/filter-control/bootstrap-table-filter-control.js">
-	
-</script>
 <!-- Custom javascript file (mostly validation) -->
 <script type="text/javascript"
 	src='<c:url value="/Resources/js/custom.js"/>'></script>
@@ -80,7 +74,7 @@
 							<li><a href="/fazada/account/order"><small>Đơn
 										hàng của tôi</small></a></li>
 						</c:if>
-						<li><a href="logout"><small>Đăng xuất</small></a></li>
+						<li><a href="/fazada/logout"><small>Đăng xuất</small></a></li>
 					</ul></li>
 			</c:if>
 			<li>
@@ -162,7 +156,6 @@
 
 	<!-- Container div -->
 	<div style="flex: 1; margin-bottom: 20px; margin-top: 20px">
-		<!-- Employee list panel -->
 		<div class="container">
 			<h3>
 				<strong>Order list</strong>
@@ -190,7 +183,8 @@
 				<table id="table" class="table" data-method="POST"
 					data-show-toggle="true" data-toolbar="#toolbar"
 					data-pagination="true" data-page-size="5"
-					data-page-list="[5,10,20,50,100,200]">
+					data-page-list="[5,10,20,50,100,200]" data-detail-view="true"
+					data-detail-formatter="detailFormatter">
 					<thead>
 						<tr>
 							<th data-field="orderId" data-sortable="true">Order No.</th>

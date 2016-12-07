@@ -6,13 +6,16 @@ import java.util.Date;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 @Controller
 @RequestMapping("")
@@ -67,12 +70,18 @@ public class WebController {
 		return "redirect:/main";
 	}
 
+	/**
+	 * @return
+	 */
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String getHomePage() {
 		// Redirect to home page
 		return "home";
 	}
 
+	/**
+	 * @return
+	 */
 	@RequestMapping(value = "/manager", method = RequestMethod.GET)
 	public String getManagerPage() {
 		// Redirect to home page
@@ -91,26 +100,55 @@ public class WebController {
 		return "redirect:/main";
 	}
 
+	/**
+	 * @return
+	 */
 	@RequestMapping(value = "/order", method = RequestMethod.GET)
 	public String getOrderPage() {
 		// Redirect to home page
 		return "order";
 	}
 
+	/**
+	 * @return
+	 */
 	@RequestMapping(value = "/account/info", method = RequestMethod.GET)
 	public String getAccountInfoPage() {
 		// Redirect to home page
 		return "info";
 	}
 
+	/**
+	 * @return
+	 */
 	@RequestMapping(value = "/account/order", method = RequestMethod.GET)
 	public String getMyOrderPage() {
 		// Redirect to home page
 		return "myOrder";
 	}
 
+	/**
+	 * @param model
+	 * @param userName
+	 * @return
+	 */
 	@RequestMapping(value = "/activate", method = RequestMethod.GET)
-	public String getActivePage() {
+	public String getActivePage(ModelMap model, @RequestParam(value = "userName", required = false) String userName) {
+		if (userName != null && !userName.trim().equals("")) {
+			try {
+				RestTemplate temp = new RestTemplate();
+				ResponseEntity<String> response = temp.postForEntity(
+						"http://localhost:8080/fazadaws/account/activate/" + userName, null, String.class);
+				model.put("activateMessage", response.getBody());
+				model.put("statusCode", response.getStatusCodeValue());
+			} catch (HttpClientErrorException e) {
+				model.put("activateMessage", e.getResponseBodyAsString());
+				model.put("statusCode", e.getRawStatusCode());
+			}
+		} else {
+			model.put("activateMessage", "Invalid request");
+			model.put("statusCode", 400);
+		}
 		// Redirect to home page
 		return "activate";
 	}

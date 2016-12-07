@@ -6,7 +6,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -23,7 +24,7 @@
 	rel="stylesheet" />
 <link
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-	rel="stylesheet">
+	rel="stylesheet" />
 <script type="text/javascript"
 	src='<c:url value="/Resources/js/custom.js"/>'></script>
 <title>Fazada</title>
@@ -36,8 +37,11 @@
 			id="sidebar-wrapper" role="navigation">
 		<ul class="nav sidebar-nav">
 			<c:if test="${empty accountInfo}">
-				<li><a href="#" style="font-size: 16px" data-toggle="modal"
-					data-target="#myModal">Đăng nhập / Đăng ký</a></li>
+				<li><span data-toggle="modal" data-target="#myModal"
+					style="font-weight: bold"> <a href="#login"
+						data-toggle="tab">Đăng nhập</a><a href="#signup" data-toggle="tab">Đăng
+							ký</a>
+				</span></li>
 			</c:if>
 			<c:if test="${not empty accountInfo}">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -133,7 +137,6 @@
 				<span class="hamb-top"></span> <span class="hamb-middle"></span> <span
 					class="hamb-bottom"></span>
 			</button>
-
 		</div>
 		<!-- /#page-content-wrapper -->
 	</div>
@@ -223,7 +226,8 @@
 					<div id="ajaxMessage"></div>
 					<!-- User name -->
 					<div class="tab-content">
-						<div id="login" class="tab-pane fade clearfix in active well well-sm well-white">
+						<div id="login"
+							class="tab-pane fade clearfix in active well well-sm well-white">
 							<form id="loginForm" action="login" method="POST">
 								<!-- User name -->
 								<div class="form-group">
@@ -246,7 +250,8 @@
 								</div>
 							</form>
 						</div>
-						<div id="signup" class="tab-pane clearfix fade well well-sm well-white">
+						<div id="signup"
+							class="tab-pane clearfix fade well well-sm well-white">
 							<form id="signupForm" action="signup">
 								<!-- User name -->
 								<div class="form-group">
@@ -282,7 +287,7 @@
 									<!-- Date picker -->
 									<input type="text" data-provide="datepicker"
 										class="form-control" data-date-format="dd/mm/yyyy" value=""
-										placeholder="dd/mm/yyyy" id="dateOfBirth" name="dateOfBirth" />
+										placeholder="dd/mm/yyyy" id="dateOfBirth" name="dateOfBirth" autocomplete='off'/>
 									<div id="dob_error" class="text-danger"></div>
 								</div>
 								<!-- Email -->
@@ -299,7 +304,8 @@
 								</div>
 							</form>
 						</div>
-						<div id="forget" class="tab-pane clearfix fade well well-sm well-white">
+						<div id="forget"
+							class="tab-pane clearfix fade well well-sm well-white">
 							<form action="signup" id="forgetForm">
 								<!-- User name -->
 								<div class="form-group">

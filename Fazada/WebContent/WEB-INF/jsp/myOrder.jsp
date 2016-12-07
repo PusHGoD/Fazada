@@ -26,7 +26,7 @@
 <link href="<c:url value='/Resources/css/main.css' />" rel="stylesheet" />
 <link
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-	rel="stylesheet">
+	rel="stylesheet"/>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/extensions/toolbar/bootstrap-table-toolbar.js"></script>
 <script

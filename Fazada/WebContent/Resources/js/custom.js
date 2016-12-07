@@ -51,6 +51,11 @@ $(function() {
 		$(loadInfo());
 	}
 
+	$('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+		$("ul.nav-tabs > li.active").removeClass("active");
+		$("a[href='" + e.target.hash + "']").closest("li").addClass("active");
+	});
+
 	/* Client functions */
 	$("#order-select").change(function() {
 		var today = new Date();
@@ -118,11 +123,10 @@ $(function() {
 			break;
 		}
 		default: {
-			if (/^\d+$/.test($("#order-select").val())) {
-				priorDate = new Date($("#order-select").val(), 0, 2);
+			if (/^\d+$/.test($("#my-order-select").val())) {
+				priorDate = new Date($("#my-order-select").val(), 0, 2);
 				loadMyOrderListWithRange(priorDate, today);
 			}
-
 			break;
 		}
 		}
@@ -134,7 +138,7 @@ $(function() {
 		clearTimeout(timer);
 		timer = setTimeout(function(event) {
 			if ($("#search").val() == "") {
-				loadOrder();
+				loadOrderList();
 			} else {
 				searchOrderByUserNameOrOrderId($("#search").val());
 			}
@@ -430,6 +434,9 @@ function loadUserList() {
 		success : function(list) {
 			$('#table').bootstrapTable("load", list);
 			$('#table').bootstrapTable({
+				formatNoMatches : function() {
+					return "No user found";
+				},
 				data : list
 			});
 			$('#table').on('click-row.bs.table', function(e, row, $element) {
@@ -454,6 +461,9 @@ function loadOrderList() {
 		success : function(list) {
 			$('#table').bootstrapTable("load", list);
 			$('#table').bootstrapTable({
+				formatNoMatches : function() {
+					return "No order found";
+				},
 				data : list
 			});
 			$('#table').on('click-row.bs.table', function(e, row, $element) {
@@ -478,6 +488,9 @@ function loadMyOrderList() {
 		success : function(list) {
 			$('#table').bootstrapTable("load", list);
 			$('#table').bootstrapTable({
+				formatNoMatches : function() {
+					return "No order found";
+				},
 				data : list
 			});
 			$('#table').on('click-row.bs.table', function(e, row, $element) {
@@ -505,9 +518,6 @@ function loadMyOrderListWithRange(priorDate, today) {
 		}),
 		success : function(list) {
 			$('#table').bootstrapTable("load", list);
-			$('#table').bootstrapTable({
-				data : list
-			});
 			$('#table').on('click-row.bs.table', function(e, row, $element) {
 				$('.success').removeClass('success');
 				$($element).addClass('success');
@@ -632,6 +642,18 @@ function statusFormatter(value, row, index) {
 	default:
 		return "Invalid status";
 	}
+}
+
+function detailFormatter(index, row) {
+	var html = [];
+	html.push('<div class="container" style="font-size:20px">Order detail:');
+	$.each(row.orderdetails, function(key, value) {
+		html.push('<span style="font-size:18px">' + value.product.productName
+				+ '</span><br/><span style="font-size:14px">Quantity: '
+				+ value.quantity + '</span>');
+	});
+	html.push("</div>");
+	return html.join('<br/><br/>');
 }
 
 function actionFormatter(value, row, index) {

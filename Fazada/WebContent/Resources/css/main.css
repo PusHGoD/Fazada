@@ -27,7 +27,7 @@ body, html {
 }
 
 #sidebar-wrapper {
-	z-index: 1000;
+	z-index: 999;
 	left: 220px;
 	width: 0;
 	height: 100%;
@@ -383,5 +383,5 @@ body, html {
 }
 
 .well-white {
-    background: rgb(255, 255, 255);
+	background: rgb(255, 255, 255);
 }

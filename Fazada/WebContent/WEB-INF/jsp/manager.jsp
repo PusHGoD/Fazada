@@ -30,7 +30,7 @@
 <link href="<c:url value='/Resources/css/main.css' />" rel="stylesheet" />
 <link
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-	rel="stylesheet">
+	rel="stylesheet"/>
 <!-- Custom javascript file (mostly validation) -->
 <script type="text/javascript"
 	src='<c:url value="/Resources/js/custom.js"/>'></script>
@@ -76,7 +76,7 @@
 							<li><a href="/fazada/account/order"><small>Đơn
 										hàng của tôi</small></a></li>
 						</c:if>
-						<li><a href="logout"><small>Đăng xuất</small></a></li>
+						<li><a href="/fazada/logout"><small>Đăng xuất</small></a></li>
 					</ul></li>
 			</c:if>
 			<li>
@@ -253,7 +253,7 @@
 							<!-- Date picker -->
 							<input id="dateOfBirth" name="dateOfBirth" type="text"
 								data-provide="datepicker" class="form-control"
-								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy" />
+								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy" autocomplete='off'/>
 							<div id="dob_error" class="text-danger"></div>
 						</div>
 						<!-- Email -->
@@ -309,7 +309,7 @@
 							<!-- Date picker -->
 							<input id="dateOfBirth" name="dateOfBirth" type="text"
 								data-provide="datepicker" class="form-control"
-								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy" />
+								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy" autocomplete='off'/>
 							<div id="dob_error" class="text-danger"></div>
 						</div>
 						<!-- Email -->
