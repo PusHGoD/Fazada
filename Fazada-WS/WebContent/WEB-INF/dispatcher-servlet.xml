@@ -17,15 +17,24 @@
 	<bean id="accountdao" class="com.fazada.dao.impl.AccountDAOImpl">
 	</bean>
 
+	<!-- Order DAO implementation definition -->
 	<bean id="orderdao" class="com.fazada.dao.impl.OrderDAOImpl">
+	</bean>
+
+	<!-- Product DAO implementation definition -->
+	<bean id="productdao" class="com.fazada.dao.impl.ProductDAOImpl">
 	</bean>
 
 	<!-- Account service definition -->
 	<bean id="accountService" class="com.fazada.service.impl.AccountServiceImpl">
 	</bean>
 
-	<!-- Account service definition -->
+	<!-- Order service definition -->
 	<bean id="orderService" class="com.fazada.service.impl.OrderServiceImpl">
+	</bean>
+
+	<!-- Product service definition -->
+	<bean id="productService" class="com.fazada.service.impl.ProductServiceImpl">
 	</bean>
 
 	<!-- Datasource definition -->

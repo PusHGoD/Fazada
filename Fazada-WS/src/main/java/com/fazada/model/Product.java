@@ -27,26 +27,29 @@ public class Product implements java.io.Serializable {
 	private String productName;
 	private int price;
 	private boolean status;
+	private String img;
 	private Set<Orderdetail> orderdetails = new HashSet<Orderdetail>(0);
 
 	public Product() {
 	}
 
-	public Product(int productId, Brand brand, String productName, int price, boolean status) {
+	public Product(int productId, Brand brand, String productName, int price, boolean status, String img) {
 		this.productId = productId;
 		this.brand = brand;
 		this.productName = productName;
 		this.price = price;
 		this.status = status;
+		this.img = img;
 	}
 
-	public Product(int productId, Brand brand, String productName, int price, boolean status,
+	public Product(int productId, Brand brand, String productName, int price, boolean status, String img,
 			Set<Orderdetail> orderdetails) {
 		this.productId = productId;
 		this.brand = brand;
 		this.productName = productName;
 		this.price = price;
 		this.status = status;
+		this.img = img;
 		this.orderdetails = orderdetails;
 	}
 
@@ -98,8 +101,17 @@ public class Product implements java.io.Serializable {
 		this.status = status;
 	}
 
+	@Column(name = "img", nullable = false)
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
-	@JsonBackReference(value="orderdetails-product")
+	@JsonManagedReference(value = "orderdetails-product")
 	public Set<Orderdetail> getOrderdetails() {
 		return this.orderdetails;
 	}

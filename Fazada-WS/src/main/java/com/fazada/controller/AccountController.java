@@ -112,7 +112,7 @@ public class AccountController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=*/*", produces = "application/json")
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String loadAccountList() throws JsonProcessingException {
 		// Get list
 		List<Account> list = service.getAccountList();
@@ -248,13 +248,10 @@ public class AccountController {
 			// Log Hibernate error message
 			logger.error("Error in processing request in DB :" + e.getMessage());
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error in processing request in DB :" + e.getMessage());
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error in processing request in DB :" + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error in processing request in DB :" + e.getMessage());
 		}
 		// Return message
@@ -293,7 +290,7 @@ public class AccountController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/info/{userName}", method = RequestMethod.GET, headers = "Accept=*/*", produces = "application/json")
+	@RequestMapping(value = "/info/{userName}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String getAccountInfo(@PathVariable("userName") String userName) throws JsonProcessingException {
 		// Get list
 		Account list = service.getAccountByUserName(userName);

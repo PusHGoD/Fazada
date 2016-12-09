@@ -13,7 +13,7 @@ public interface OrderDAO {
 
 	public List<Order> getOrderListByUser(String userName);
 
-	public List<Order> getOrderByNumber(String orderId);
+	public List<Order> getOrderByNumber(Integer orderId);
 
 	public List<Order> getOrderListByUserOrNumber(String searchValue);
 

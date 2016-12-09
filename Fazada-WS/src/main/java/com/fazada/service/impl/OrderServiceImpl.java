@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
 	 * @see com.fazada.service.OrderService#getOrderByNumber(java.lang.String)
 	 */
 	@Override
-	public List<Order> getOrderByNumber(String orderId) {
+	public List<Order> getOrderByNumber(Integer orderId) {
 		return dao.getOrderByNumber(orderId);
 	}
 

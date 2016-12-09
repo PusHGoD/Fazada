@@ -29,7 +29,7 @@ public interface OrderService {
 	 * @param orderId
 	 * @return
 	 */
-	public List<Order> getOrderByNumber(String orderId);
+	public List<Order> getOrderByNumber(Integer orderId);
 
 	/**
 	 * @param searchValue

@@ -56,10 +56,10 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public List<Order> getOrderByNumber(String orderId) {
+	public List<Order> getOrderByNumber(Integer orderId) {
 		Session session = sessionFactory.getCurrentSession();
-		Query<Order> query = session.createQuery("from Order o where str(o.id) like :orderid");
-		query.setParameter("orderid", "%" + orderId + "%");
+		Query<Order> query = session.createQuery("from Order o where o.id =orderid");
+		query.setParameter("orderid", orderId);
 		return query.getResultList();
 	}
 

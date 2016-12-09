@@ -2,6 +2,8 @@ package com.fazada.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,9 @@ public class ProductDAOImpl extends GenericDAOImpl<Integer, Product> implements 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Product> getProductList() {
-		return this.find();
+		Session session = sessionFactory.getCurrentSession();
+		Query<Product> query = session.createQuery("from Product p");
+		return query.getResultList();
 	}
 
 }

@@ -1,12 +1,19 @@
 package com.fazada.controller;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+import org.hibernate.HibernateException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
@@ -57,7 +64,7 @@ public class OrderController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String getOrderList() throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(service.getOrderList());
@@ -69,7 +76,7 @@ public class OrderController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/list/time/{date1},{date2}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/list/time/{date1},{date2}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String getOrderListByTimeRange(@PathVariable("date1") String d1, @PathVariable("date2") String d2)
 			throws JsonProcessingException {
 		Date date1 = null, date2 = null;
@@ -88,21 +95,10 @@ public class OrderController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/list/user/{user}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/list/user/{user}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String getOrderListByUser(@PathVariable("user") String userName) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(service.getOrderListByUser(userName));
-	}
-
-	/**
-	 * @param orderId
-	 * @return
-	 * @throws JsonProcessingException
-	 */
-	@RequestMapping(value = "/list/order/{order}", method = RequestMethod.GET, produces = "application/json")
-	public String getOrderByNumber(@PathVariable("order") String orderId) throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(service.getOrderByNumber(orderId));
 	}
 
 	/**
@@ -110,7 +106,7 @@ public class OrderController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/list/search/{search}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/list/search/{search}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String getOrderListByUserOrNumber(@PathVariable("search") String searchValue)
 			throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -122,7 +118,7 @@ public class OrderController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/list/user/time", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/list/user/time", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public String getOrderListByUserAndTimeRange(@RequestBody String strJSON) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		JSONObject json = new JSONObject(strJSON);
@@ -156,21 +152,56 @@ public class OrderController {
 		}
 		return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	/**
 	 * @param strJSON
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/import/json", method = RequestMethod.POST)
-	public ResponseEntity<String> importOrderByJSON(@RequestBody Order order) throws JsonProcessingException {
-		if (order != null) {
-			boolean result = service.addOrder(order);
-			if (result) {
-				return new ResponseEntity<>("Order imported!", HttpStatus.OK);
-			} else
-				return new ResponseEntity<>("Error in updating status!", HttpStatus.INTERNAL_SERVER_ERROR);
+	@RequestMapping(value = "/import/json", method = RequestMethod.POST, consumes = { "application/json" })
+	public ResponseEntity<String> importOrderByJSON(@RequestBody Order order) {
+		try {
+			if (order != null) {
+				if (service.getOrderByNumber(order.getOrderId()) != null) {
+					return new ResponseEntity<>("Order id is existed!", HttpStatus.BAD_REQUEST);
+				}
+				boolean result = service.addOrder(order);
+				if (result) {
+					return new ResponseEntity<>("Order imported!", HttpStatus.OK);
+				} else
+					return new ResponseEntity<>("Error in updating status!", HttpStatus.INTERNAL_SERVER_ERROR);
+			} else {
+				return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
+			}
+		} catch (HibernateException | DataIntegrityViolationException e) {
+			return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/import/xml", method = RequestMethod.POST)
+	public ResponseEntity<String> importOrderByXML(@RequestBody String message) throws JAXBException {
+		File file = new File(message);
+		if (file.exists()) {
+			JAXBContext context = JAXBContext.newInstance(Order.class);
+			Unmarshaller un = context.createUnmarshaller();
+			Order order = (Order) un.unmarshal(file);
+			try {
+				if (order != null) {
+					if (service.getOrderByNumber(order.getOrderId()) != null) {
+						return new ResponseEntity<>("Order id is existed!", HttpStatus.BAD_REQUEST);
+					}
+					boolean result = service.addOrder(order);
+					if (result) {
+						return new ResponseEntity<>("Order imported!", HttpStatus.OK);
+					} else
+						return new ResponseEntity<>("Error in updating status!", HttpStatus.INTERNAL_SERVER_ERROR);
+				} else {
+					return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
+				}
+			} catch (HibernateException | DataIntegrityViolationException e) {
+				return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
+			}
+		}
+		return new ResponseEntity<>("File does not exist or invalid file type!", HttpStatus.BAD_REQUEST);
 	}
 }

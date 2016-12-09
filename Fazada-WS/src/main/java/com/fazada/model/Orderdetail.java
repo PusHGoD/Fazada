@@ -10,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hibernate.annotations.Cascade;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -61,7 +64,7 @@ public class Orderdetail implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "productID", nullable = false, insertable = false, updatable = false)
-	@JsonManagedReference(value="orderdetails-product")
+	@JsonBackReference(value="orderdetails-product")
 	public Product getProduct() {
 		return this.product;
 	}

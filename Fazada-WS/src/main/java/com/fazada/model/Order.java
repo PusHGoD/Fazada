@@ -4,6 +4,8 @@ package com.fazada.model;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +16,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -25,13 +31,22 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
  */
 @Entity
 @Table(name = "order", catalog = "fazada")
+@XmlRootElement(name = "order")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Order implements java.io.Serializable {
 
+	@XmlElement
 	private int orderId;
+	@XmlElement
 	private Account account;
+	@XmlElement
 	private Date dateTime;
+	@XmlElement
 	private int total;
+	@XmlElement
 	private int orderstatus;
+
+	@XmlElement
 	private Set<Orderdetail> orderdetails = new HashSet<Orderdetail>(0);
 
 	public Order() {
@@ -103,8 +118,8 @@ public class Order implements java.io.Serializable {
 		this.orderstatus = orderstatus;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
-	@JsonManagedReference(value="order-orderdetails")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = { CascadeType.ALL })
+	@JsonManagedReference(value = "order-orderdetails")
 	@Fetch(FetchMode.SELECT)
 	public Set<Orderdetail> getOrderdetails() {
 		return this.orderdetails;
