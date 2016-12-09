@@ -44,7 +44,7 @@
 	</div>
 	<div id="wrapper">
 		<!-- Sidebar -->
-		<div class="overlay"></div>
+		<div class="overlay" style="z-index: 3"></div>
 		<nav class="navbar navbar-inverse navbar-fixed-top"
 			id="sidebar-wrapper" role="navigation">
 		<ul class="nav sidebar-nav">
@@ -88,9 +88,7 @@
 					</div>
 				</form>
 			</li>
-			<li><a href="#"><img
-					src="<c:url value='/Resources/pic/'/>icon.png" height="30px"
-					width="30px" /></a></li>
+			<li class="dropdown"><a href="/fazada/product">Sản phẩm<span class="caret"></span></a></li>
 			<li class="dropdown"><a href="#" class="dropdown-toggle"
 				data-toggle="dropdown">Thực phẩm <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
@@ -203,17 +201,15 @@
 			</div>
 		</div>
 	</div>
-	<div class="footer">
-		<div class="footer-container">
-			<a href='#'><i class="fa fa-twitch fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-facebook fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-twitter fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-youtube-play fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-rss fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-vine fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-flickr fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-linkedin fa-3x fa-fw"></i></a>
-		</div>
+	<div class="footer footer-container">
+		<a href='#'><i class="fa fa-twitch fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-facebook fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-twitter fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-youtube-play fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-rss fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-vine fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-flickr fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-linkedin fa-3x fa-fw"></i></a>
 	</div>
 	<!-- Add modal form -->
 	<div class="modal fade" id="addModal" tabindex="-1" role="dialog"

@@ -1,62 +1,53 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+	pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-<!-- Optional theme -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
-<!-- Latest compiled and minified JavaScript -->
 <script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link
-	href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css"
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"
+	type="text/javascript"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	type="text/javascript"></script>
+<link href="<c:url value='/Resources/css/main.css' />" rel="stylesheet" />
+<link href="<c:url value='/Resources/css/product.css' />"
 	rel="stylesheet" />
-<script
-	src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
-<link href="<c:url value='/Resources/css/main.css'/>" rel="stylesheet" />
-<link
-	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-	rel="stylesheet" />
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment.js"></script>
-<!-- Custom javascript file (mostly validation) -->
 <script type="text/javascript"
 	src='<c:url value="/Resources/js/custom.js"/>'></script>
-<script type="text/javascript"
-	src='<c:url value="/Resources/js/editable.js"/>'></script>
-<title>Account Info</title>
+<link href="<c:url value='/Resources/css/full-slider.css' />"
+	rel="stylesheet" />
+<link
+	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<title>Product</title>
+
 </head>
-<body id="account-info-page">
-	<div class="center-block">
-		<a href="/fazada/main"><img
-			src="<c:url value='/Resources/pic/'/>FazadaGroupLogo.jpg"
-			style="width: 300px; padding-left: 60px" /></a>
-	</div>
+<body id="product-page">
 	<div id="wrapper">
+		<div class="overlay"></div>
 		<!-- Sidebar -->
-		<div class="overlay" style="z-index: 3"></div>
 		<nav class="navbar navbar-inverse navbar-fixed-top"
 			id="sidebar-wrapper" role="navigation">
 		<ul class="nav sidebar-nav">
-			<c:if test="${empty accountInfo or empty role}">
-				<c:redirect url="/main"></c:redirect>
+			<c:if test="${empty accountInfo}">
+				<li><span data-toggle="modal" data-target="#myModal"
+					style="font-weight: bold"> <a href="#login"
+						data-toggle="tab">Đăng nhập</a><a href="#signup" data-toggle="tab">Đăng
+							ký</a>
+				</span></li>
 			</c:if>
 			<c:if test="${not empty accountInfo}">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" style="font-size: 18px"><img
 						src="<c:url value='/Resources/pic/'/>user.png" height="30px"
-						width="30px" /><span id="accountInfo">${accountInfo}</span><span
-						class="caret"></span></a>
+						width="30px" /><span> ${accountInfo}</span><span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
 						<li class="dropdown-header"></li>
 						<c:if test="${role eq 'admin'}">
@@ -81,13 +72,11 @@
 					</ul></li>
 			</c:if>
 			<li>
-				<form class="navbar-form navbar-left">
-					<div class="form-group">
-						<input class="form-control" type="text"
-							placeholder="&#xF002; Search"
-							style="font-family: Arial, FontAwesome" />
-					</div>
-				</form>
+				<div class="navbar-text">
+					<input class="form-control" type="text"
+						placeholder="&#xF002; Search"
+						style="font-family: Arial, FontAwesome" />
+				</div>
 			</li>
 			<li class="dropdown"><a href="/fazada/product">Sản phẩm<span
 					class="caret"></span></a></li>
@@ -108,7 +97,6 @@
 					<li><a href="#">Máy tính bảng</a></li>
 					<li><a href="#">Phụ kiện</a></li>
 					<li><a href="#">Laptop</a></li>
-
 				</ul></li>
 			<li class="dropdown"><a href="#" class="dropdown-toggle"
 				data-toggle="dropdown">Thời trang nam <span class="caret"></span></a>
@@ -118,7 +106,6 @@
 					<li><a href="#">Quần nam</a></li>
 					<li><a href="#">Giày dép nam</a></li>
 					<li><a href="#">Áo khoác nam</a></li>
-
 				</ul></li>
 			<li class="dropdown"><a href="#" class="dropdown-toggle"
 				data-toggle="dropdown">Thời trang nữ <span class="caret"></span></a>
@@ -139,7 +126,6 @@
 					<li><a href="#">Bóng bàn</a></li>
 				</ul></li>
 		</ul>
-
 		</nav>
 		<!-- /#sidebar-wrapper -->
 
@@ -154,89 +140,84 @@
 		<!-- /#page-content-wrapper -->
 	</div>
 	<!-- /#wrapper -->
-
-	<!-- Container div -->
-	<div style="flex: 1; margin-bottom: 20px; margin-top: 20px">
-		<!-- Employee list panel -->
+	<!-- Page Content -->
+	<div id="page-content-wrapper">
+		<button type="button" class="hamburger is-closed"
+			data-toggle="offcanvas">
+			<span class="hamb-top"></span> <span class="hamb-middle"></span> <span
+				class="hamb-bottom"></span>
+		</button>
 		<div class="container">
-			<div class="col-md-3 col-lg-3">
-				<ul class="nav nav-pills nav-stacked" data-spy="affix"
-					data-offset-top="205">
-					<li><div id="submenu" class="list-group">
-							<a href="#editInfo" data-toggle="tab"
-								class="list-group-item submenu active">Chỉnh sửa thông tin</a> <a
-								href="#updatePassword" data-toggle="tab"
-								class="list-group-item submenu">Đổi mật khẩu</a>
-						</div></li>
+			<div class="row">
+				<div></div>
+			</div>
+		</div>
+	</div>
+	<!-- /#page-content-wrapper -->
+	</div>
+	<!-- /#wrapper -->
+	<div style="flex: 1; margin-bottom: 20px; margin-top: 20px">
+		<div class="container">
+			<div class="accordian">
+				<ul>
+					<li>
+						<div class="image_title">
+							<a href="#">OG388.67AGR-GL &emsp; &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; 1.735.000vnd</a>
+						</div> <a href="#"> <img
+							src="<c:url value='/Resources/pic/product/'/>w1.jpg" />
+					</a>
+					</li>
+					<li>
+						<div class="image_title">
+							<a href="#">OG358.621AMR-GL &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; &emsp; 1.735.000vnd</a>
+						</div> <a href="#"> <img
+							src="<c:url value='/Resources/pic/product/'/>w2.jpg" />
+					</a>
+					</li>
+					<li>
+						<div class="image_title">
+							<a href="#">OG358.61AGR-GL &emsp; &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; 1.735.000vnd</a>
+						</div> <a href="#"> <img
+							src="<c:url value='/Resources/pic/product/'/>w3.jpg" />
+					</a>
+					</li>
+					<li>
+						<div class="image_title">
+							<a href="#">OG388.63AGR-GL &emsp; &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; 1.735.000vnd</a>
+						</div> <a href="#"> <img
+							src="<c:url value='/Resources/pic/product/'/>w4.jpg" />
+					</a>
+					</li>
+					<li>
+						<div class="image_title">
+							<a href="#">OG388.61AGR-GL &emsp; &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+								&emsp; &emsp; 1.735.000vnd</a>
+						</div> <a href="#"> <img
+							src="<c:url value='/Resources/pic/product/'/>w5.jpg" />
+					</a>
+					</li>
 				</ul>
 			</div>
-			<div class="col-md-9 col-lg-9 well well-white tab-content">
-				<div id="ajaxMessage"></div>
-				<div id="editInfo" class="tab-pane fade clearfix in active">
-					<h3>
-						<strong>Account Info</strong>
-					</h3>
-					<br />
-					<!-- Div conatining information -->
-					<div id="infoDiv">
-						<div class="form-group">
-							<label>ID:</label> <span id="id"></span>
-						</div>
-						<div class="form-group">
-							<label>User name:</label> <span id="userName"></span>
-						</div>
-						<div class="form-group">
-							<label>First name:</label> <a href="#" id="firstName"
-								data-pk="${accountInfo}" data-type="text" data-value=""></a>
-						</div>
-						<div class="form-group">
-							<label>Last name:</label> <a href="#" id="lastName"
-								data-pk="${accountInfo}" data-type="text" data-value=""></a>
-						</div>
-						<div class="form-group">
-							<label>Date of birth:</label> <a href="#" id="dateOfBirth"
-								data-pk="${accountInfo}" data-type="combodate" data-value=""
-								data-format="YYYY-MM-DD" data-viewformat="DD/MM/YYYY"
-								data-template="D / MMMM / YYYY"></a>
-						</div>
-						<div class="form-group">
-							<label>Email:</label> <a href="#" id="email"
-								data-pk="${accountInfo}" data-type="text" data-value=""></a>
-						</div>
-					</div>
-				</div>
-				<div id="updatePassword" class="tab-pane fade clearfix">
-					<h3>
-						<strong>Change password</strong>
-					</h3>
-					<br />
-					<form id="changePassForm">
-						<input type="hidden" id="userName" name="userName"
-							value="${accountInfo}" />
-						<div class="form-group">
-							Old Password: <input type="password" class="form-control"
-								value="" placeholder="Password" id="old_password"
-								name="oldPassword" />
-							<div id="old_password_error" class="text-danger"></div>
-						</div>
-						<div class="form-group">
-							New Password: <input type="password" class="form-control"
-								value="" placeholder="Password" id="new_password"
-								name="password" />
-							<div id="new_password_error" class="text-danger"></div>
-						</div>
-						<div class="form-group">
-							Confirm password: <input type="password" class="form-control"
-								value="" placeholder="Confirm password" id="confirm" />
-							<div id="password_confirm_error" class="text-danger"></div>
-						</div>
-						<div class="form-group pull-right">
-							<button type="button" id="password-change-btn"
-								class="btn btn-primary">Update password</button>
-						</div>
-					</form>
-				</div>
-			</div>
+
+			<!-- ================LIST DEV================== -->
+			<center>
+				<img src="https://www.xwatch.vn/home/img/assets/SPbanchaynhat.png" />
+			</center>
+			<input type='hidden' id='current_page' /> <input type='hidden'
+				id='show_per_page' />
+			<div id="content" class="container"></div>
+			<center>
+				<div id="page_navigation"></div>
+			</center>
 		</div>
 	</div>
 	<div class="footer footer-container">
@@ -247,7 +228,7 @@
 			class="fa fa-rss fa-3x fa-fw"></i></a> <a href='#'><i
 			class="fa fa-vine fa-3x fa-fw"></i></a> <a href='#'><i
 			class="fa fa-flickr fa-3x fa-fw"></i></a> <a href='#'><i
-			class="fa fa-linkedin fa-3x fa-fw"></i></a>
+			class="fa fa-linkedin fa-3x fa-fw"></i></a> </span>
 	</div>
 </body>
 </html>

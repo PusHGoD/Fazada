@@ -78,9 +78,7 @@
 						style="font-family: Arial, FontAwesome" />
 				</div>
 			</li>
-			<li><a href="#"><img
-					src="<c:url value='Resources/pic/'/>icon.png" height="30px"
-					width="30px" /></a></li>
+			<li class="dropdown"><a href="/fazada/product">Sản phẩm<span class="caret"></span></a></li>
 			<li class="dropdown"><a href="#" class="dropdown-toggle"
 				data-toggle="dropdown">Thực phẩm <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
@@ -197,17 +195,15 @@
 
 		</div>
 	</div>
-	<div class="footer">
-		<div class="footer-container">
-			<a href='#'><i class="fa fa-twitch fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-facebook fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-twitter fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-youtube-play fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-rss fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-vine fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-flickr fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-linkedin fa-3x fa-fw"></i></a>
-		</div>
+	<div class="footer footer-container">
+		<a href='#'><i class="fa fa-twitch fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-facebook fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-twitter fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-youtube-play fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-rss fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-vine fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-flickr fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-linkedin fa-3x fa-fw"></i></a>
 	</div>
 	<!-- Login Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -287,7 +283,8 @@
 									<!-- Date picker -->
 									<input type="text" data-provide="datepicker"
 										class="form-control" data-date-format="dd/mm/yyyy" value=""
-										placeholder="dd/mm/yyyy" id="dateOfBirth" name="dateOfBirth" autocomplete='off'/>
+										placeholder="dd/mm/yyyy" id="dateOfBirth" name="dateOfBirth"
+										autocomplete='off' />
 									<div id="dob_error" class="text-danger"></div>
 								</div>
 								<!-- Email -->

@@ -42,7 +42,7 @@
 	</div>
 	<div id="wrapper">
 		<!-- Sidebar -->
-		<div class="overlay"></div>
+		<div class="overlay" style="z-index: 3"></div>
 		<nav class="navbar navbar-inverse navbar-fixed-top"
 			id="sidebar-wrapper" role="navigation">
 		<ul class="nav sidebar-nav">
@@ -87,9 +87,7 @@
 				</form>
 			</li>
 
-			<li><a href="#"><img
-					src="<c:url value='/Resources/pic/'/>icon.png" height="30px"
-					width="30px" /></a></li>
+			<li class="dropdown"><a href="/fazada/product">Sản phẩm<span class="caret"></span></a></li>
 			<li class="dropdown"><a href="#" class="dropdown-toggle"
 				data-toggle="dropdown">Thực phẩm <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
@@ -158,7 +156,7 @@
 	<div style="flex: 1; margin-bottom: 20px; margin-top: 20px">
 		<div class="container">
 			<h3>
-				<strong>Order list</strong>
+				<strong>Danh sách đơn hàng</strong>
 			</h3>
 			<div id="ajaxMessage"></div>
 			<!-- Div conatining information -->
@@ -170,12 +168,13 @@
 						style="font-family: Arial, FontAwesome" />
 				</form>
 				<div id="toolbar" class="btn-group">
-					<span id="items">0</span> orders in <select id="order-select">
-						<option>All</option>
-						<option>In 15 days</option>
-						<option>In 30 days</option>
-						<option>In 3 months</option>
-						<option>In 6 months</option>
+					<span id="items">0</span> đơn hàng trong vòng <select
+						id="order-select">
+						<option value="All">Tất cả</option>
+						<option value="In 15 days">15 ngày</option>
+						<option value="In 30 days">30 ngày</option>
+						<option value="In 3 months">3 tháng</option>
+						<option value="In 6 months">6 tháng</option>
 					</select>
 
 				</div>
@@ -202,17 +201,15 @@
 			</div>
 		</div>
 	</div>
-	<div class="footer">
-		<div class="footer-container">
-			<a href='#'><i class="fa fa-twitch fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-facebook fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-twitter fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-youtube-play fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-rss fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-vine fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-flickr fa-3x fa-fw"></i></a> <a href='#'><i
-				class="fa fa-linkedin fa-3x fa-fw"></i></a>
-		</div>
+	<div class="footer footer-container">
+		<a href='#'><i class="fa fa-twitch fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-facebook fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-twitter fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-youtube-play fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-rss fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-vine fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-flickr fa-3x fa-fw"></i></a> <a href='#'><i
+			class="fa fa-linkedin fa-3x fa-fw"></i></a>
 	</div>
 </body>
 </html>

@@ -152,4 +152,10 @@ public class WebController {
 		// Redirect to home page
 		return "activate";
 	}
+
+	@RequestMapping(value = "/product", method = RequestMethod.GET)
+	public String getProductPage() {
+		// Redirect to home page
+		return "product";
+	}
 }
