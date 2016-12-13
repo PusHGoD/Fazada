@@ -89,8 +89,7 @@
 					</div>
 				</form>
 			</li>
-			<li class="dropdown"><a href="/fazada/product">Sản phẩm<span
-					class="caret"></span></a></li>
+			<li class="dropdown"><a href="/fazada/product">Sản phẩm</a></li>
 			<li class="dropdown"><a href="#" class="dropdown-toggle"
 				data-toggle="dropdown">Thực phẩm <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">

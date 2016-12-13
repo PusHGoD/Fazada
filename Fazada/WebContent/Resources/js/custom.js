@@ -239,7 +239,7 @@ $(function() {
 				dataType : "text",
 				data : JSON.stringify(json),
 				success : function(response) {
-					loadUser();
+					loadUserList();
 					$("#addModal").find("#addForm").trigger("reset");
 					showAJAXSuccessMessage(response);
 				},
@@ -262,7 +262,7 @@ $(function() {
 				dataType : "text",
 				data : JSON.stringify(json),
 				success : function(response) {
-					loadUser();
+					loadUserList();
 					showAJAXSuccessMessage(response);
 				},
 				error : function(data, message, xhr) {
@@ -596,7 +596,7 @@ function loadProductList() {
 					$(list)
 							.each(
 									function(i, product) {
-										if (count % 6 == 0) {
+										if (count % 5 == 0) {
 											row = $('<div class="row">')
 													.appendTo($('#content'));
 
@@ -611,9 +611,9 @@ function loadProductList() {
 										column
 												.append('<div>'
 														+ product.productName
-														+ '<br>'
+														+ '<br>$'
 														+ product.price
-														+ ' VND<br><input class="button" type="submit" value="Mua Ngay"></div>');
+														+ '<br><input class="button" type="submit" value="Mua Ngay"></div>');
 										count++;
 									});
 					page();

@@ -78,7 +78,7 @@
 						style="font-family: Arial, FontAwesome" />
 				</div>
 			</li>
-			<li class="dropdown"><a href="/fazada/product">Sản phẩm<span class="caret"></span></a></li>
+			<li class="dropdown"><a href="/fazada/product">Sản phẩm</a></li>
 			<li class="dropdown"><a href="#" class="dropdown-toggle"
 				data-toggle="dropdown">Thực phẩm <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
@@ -312,8 +312,8 @@
 								</div>
 								<!-- Password -->
 								<div class="pull-right">
-									<button type="button" class="btn btn-default" a
-										data-toggle="tab" href="#login">Back to login</button>
+									<a href="#login" class="btn btn-link" data-toggle="tab">Back
+										to login</a>
 									<button type="button" id="forget-btn" class="btn btn-primary">Get
 										password</button>
 								</div>

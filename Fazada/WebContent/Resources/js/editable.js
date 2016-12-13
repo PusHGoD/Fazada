@@ -10,7 +10,14 @@ $(function() {
 			var json = convertXEditableToJSON(params);
 			return JSON.stringify(json);
 		},
-		url : '/fazadaws/account/update'
+		url : '/fazadaws/account/update',
+		validate : function(value) {
+			if (value === null || value === '') {
+				return 'Please input first name';
+			} else if (value.length > 30) {
+				return 'First name cannot be more than 30 characters';
+			}
+		}
 	});
 	$('#lastName').editable({
 		type : 'text',
@@ -22,7 +29,14 @@ $(function() {
 			var json = convertXEditableToJSON(params);
 			return JSON.stringify(json);
 		},
-		url : '/fazadaws/account/update'
+		url : '/fazadaws/account/update',
+		validate : function(value) {
+			if (value === null || value === '') {
+				return 'Please input last name';
+			} else if (value.length > 30) {
+				return 'Last name cannot be more than 30 characters';
+			}
+		}
 	});
 	$('#dateOfBirth').editable({
 		type : 'combodate',
@@ -37,7 +51,12 @@ $(function() {
 			var json = convertXEditableToJSON(params);
 			return JSON.stringify(json);
 		},
-		url : '/fazadaws/account/update'
+		url : '/fazadaws/account/update',
+		validate : function(value) {
+			if (value === null || value === '') {
+				return 'Please input date';
+			}
+		}
 	});
 	$('#email').editable({
 		type : 'text',
@@ -49,7 +68,14 @@ $(function() {
 			var json = convertXEditableToJSON(params);
 			return JSON.stringify(json);
 		},
-		url : '/fazadaws/account/update'
+		url : '/fazadaws/account/update',
+		validate : function(value) {
+			if (value === null || value === '') {
+				return 'Please input email';
+			} else if (value.length > 30) {
+				return 'Email cannot be more than 30 characters';
+			}
+		}
 	});
 });
 

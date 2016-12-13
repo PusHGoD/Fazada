@@ -30,6 +30,11 @@
 
 </head>
 <body id="product-page">
+	<div class="center-block">
+		<a href="/fazada/main"><img
+			src="<c:url value='/Resources/pic/'/>FazadaGroupLogo.jpg"
+			style="width: 300px; padding-left: 60px" /></a>
+	</div>
 	<div id="wrapper">
 		<div class="overlay"></div>
 		<!-- Sidebar -->
@@ -78,8 +83,7 @@
 						style="font-family: Arial, FontAwesome" />
 				</div>
 			</li>
-			<li class="dropdown"><a href="/fazada/product">Sản phẩm<span
-					class="caret"></span></a></li>
+			<li class="dropdown"><a href="/fazada/product">Sản phẩm</a></li>
 			<li class="dropdown"><a href="#" class="dropdown-toggle"
 				data-toggle="dropdown">Thực phẩm <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
@@ -138,22 +142,6 @@
 			</button>
 		</div>
 		<!-- /#page-content-wrapper -->
-	</div>
-	<!-- /#wrapper -->
-	<!-- Page Content -->
-	<div id="page-content-wrapper">
-		<button type="button" class="hamburger is-closed"
-			data-toggle="offcanvas">
-			<span class="hamb-top"></span> <span class="hamb-middle"></span> <span
-				class="hamb-bottom"></span>
-		</button>
-		<div class="container">
-			<div class="row">
-				<div></div>
-			</div>
-		</div>
-	</div>
-	<!-- /#page-content-wrapper -->
 	</div>
 	<!-- /#wrapper -->
 	<div style="flex: 1; margin-bottom: 20px; margin-top: 20px">
@@ -229,6 +217,130 @@
 			class="fa fa-vine fa-3x fa-fw"></i></a> <a href='#'><i
 			class="fa fa-flickr fa-3x fa-fw"></i></a> <a href='#'><i
 			class="fa fa-linkedin fa-3x fa-fw"></i></a> </span>
+	</div>
+	<!-- Login Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#login">Login</a></li>
+						<li><a data-toggle="tab" href="#signup">Sign up</a></li>
+					</ul>
+					<div id="ajaxMessage"></div>
+					<!-- User name -->
+					<div class="tab-content">
+						<div id="login"
+							class="tab-pane fade clearfix in active well well-sm well-white">
+							<form id="loginForm" action="login" method="POST">
+								<!-- User name -->
+								<div class="form-group">
+									Username: <input type="text" class="form-control"
+										placeholder="Username" id="username" name="userName" />
+									<div id="username_error" class="text-danger"></div>
+								</div>
+								<!-- Password -->
+								<div class="form-group">
+									Password: <input type="password" class="form-control"
+										placeholder="Password" id="password" name="password" />
+									<div id="password_error" class="text-danger"></div>
+								</div>
+								<!-- Login button -->
+								<div class="pull-right">
+									<a data-toggle="tab" href="#forget">Forgot your password?</a> <span>
+										or </span>
+									<button type="button" id="login-btn" class="btn btn-primary"
+										style="width: 100px">Sign in</button>
+								</div>
+							</form>
+						</div>
+						<div id="signup"
+							class="tab-pane clearfix fade well well-sm well-white">
+							<form id="signupForm" action="signup">
+								<!-- User name -->
+								<div class="form-group">
+									User name: <input type="text" class="form-control" value=""
+										placeholder="User name" id="userName" name="userName" />
+									<div id="username_error" class="text-danger"></div>
+								</div>
+								<div class="form-group">
+									Password: <input type="password" class="form-control" value=""
+										placeholder="Password" id="password" name="password" />
+									<div id="password_error" class="text-danger"></div>
+								</div>
+								<div class="form-group">
+									Re-type password: <input type="password" class="form-control"
+										value="" placeholder="Confirm password" id="confirm" />
+									<div id="password_confirm_error" class="text-danger"></div>
+								</div>
+								<!-- First name -->
+								<div class="form-group">
+									First name: <input type="text" class="form-control" value=""
+										placeholder="First name" id="firstName" name="firstName" />
+									<div id="firstname_error" class="text-danger"></div>
+								</div>
+								<!-- Last name -->
+								<div class="form-group">
+									Last name: <input type="text" class="form-control" value=""
+										placeholder="Last name" id="lastName" name="lastName" />
+									<div id="lastname_error" class="text-danger"></div>
+								</div>
+								<!-- Date of birth -->
+								<div class="form-group">
+									Date of birth:
+									<!-- Date picker -->
+									<input type="text" data-provide="datepicker"
+										class="form-control" data-date-format="dd/mm/yyyy" value=""
+										placeholder="dd/mm/yyyy" id="dateOfBirth" name="dateOfBirth"
+										autocomplete='off' />
+									<div id="dob_error" class="text-danger"></div>
+								</div>
+								<!-- Email -->
+								<div class="form-group">
+									Email: <input type="text" class="form-control" value=""
+										placeholder="Email" id="email" name="email" />
+									<div id="email_error" class="text-danger"></div>
+								</div>
+								<!-- Modal footer -->
+								<div class="pull-right">
+									<button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn btn-primary" id="signup-btn">Sign
+										up</button>
+								</div>
+							</form>
+						</div>
+						<div id="forget"
+							class="tab-pane clearfix fade well well-sm well-white">
+							<form action="signup" id="forgetForm">
+								<!-- User name -->
+								<div class="form-group">
+									Your Email Address: <input type="text" class="form-control"
+										placeholder="Email" id="email" name="email" />
+									<div id="email_error" class="text-danger"></div>
+								</div>
+								<!-- Password -->
+								<div class="pull-right">
+									<a href="#login" class="btn btn-link" data-toggle="tab">Back
+										to login</a>
+									<button type="button" id="forget-btn" class="btn btn-primary">Get
+										password</button>
+								</div>
+							</form>
+						</div>
+						<div id="success" class="tab-pane fade">
+							<div id="message"></div>
+							<button type="button" class="btn btn-default" a data-toggle="tab"
+								href="#login" data-dismiss="modal">Back to login</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

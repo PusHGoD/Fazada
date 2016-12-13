@@ -30,7 +30,7 @@
 <link href="<c:url value='/Resources/css/main.css' />" rel="stylesheet" />
 <link
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-	rel="stylesheet"/>
+	rel="stylesheet" />
 <!-- Custom javascript file (mostly validation) -->
 <script type="text/javascript"
 	src='<c:url value="/Resources/js/custom.js"/>'></script>
@@ -88,7 +88,7 @@
 					</div>
 				</form>
 			</li>
-			<li class="dropdown"><a href="/fazada/product">Sản phẩm<span class="caret"></span></a></li>
+			<li class="dropdown"><a href="/fazada/product">Sản phẩm</a></li>
 			<li class="dropdown"><a href="#" class="dropdown-toggle"
 				data-toggle="dropdown">Thực phẩm <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
@@ -180,7 +180,7 @@
 				<table id="table" class="table" data-method="POST"
 					data-show-toggle="true" data-toolbar="#toolbar"
 					data-pagination="true" data-page-size="5"
-					data-page-list="[5,10,20,50,100,200]">
+					data-page-list="[5,10,20,50,100,200]" data-search="true">
 					<thead>
 						<tr>
 							<th data-field="id" data-sortable="true">ID</th>
@@ -249,7 +249,8 @@
 							<!-- Date picker -->
 							<input id="dateOfBirth" name="dateOfBirth" type="text"
 								data-provide="datepicker" class="form-control"
-								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy" autocomplete='off'/>
+								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy"
+								autocomplete='off' />
 							<div id="dob_error" class="text-danger"></div>
 						</div>
 						<!-- Email -->
@@ -281,7 +282,7 @@
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-hidden="true">×</button>
-						<h4 class="modal-title">Edit user</h4>
+						<h4 class="modal-title">Update user info</h4>
 					</div>
 					<!-- Modal body -->
 					<div class="modal-body">
@@ -305,7 +306,8 @@
 							<!-- Date picker -->
 							<input id="dateOfBirth" name="dateOfBirth" type="text"
 								data-provide="datepicker" class="form-control"
-								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy" autocomplete='off'/>
+								data-date-format="dd/mm/yyyy" value="" placeholder="dd/mm/yyyy"
+								autocomplete='off' />
 							<div id="dob_error" class="text-danger"></div>
 						</div>
 						<!-- Email -->
@@ -315,11 +317,11 @@
 							<div id="email_error" class="text-danger"></div>
 						</div>
 						<!-- Active -->
-						<div class="form-group">
-							Active: <input type="radio" name="active" value="true" /> <strong
-								class="text-success">Active</strong> <input type="radio"
-								name="active" value="false" /> <strong class="text-danger">Inactive</strong>
-						</div>
+<!-- 						<div class="form-group"> -->
+<!-- 							Active: <input type="radio" name="active" value="true" /> <strong -->
+<!-- 								class="text-success">Active</strong> <input type="radio" -->
+<!-- 								name="active" value="false" /> <strong class="text-danger">Inactive</strong> -->
+<!-- 						</div> -->
 					</div>
 					<!-- Modal footer -->
 					<div class="modal-footer">
