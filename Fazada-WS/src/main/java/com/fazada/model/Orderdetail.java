@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.Cascade;
@@ -64,7 +66,6 @@ public class Orderdetail implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "productID", nullable = false, insertable = false, updatable = false)
-	@JsonBackReference(value="orderdetails-product")
 	public Product getProduct() {
 		return this.product;
 	}

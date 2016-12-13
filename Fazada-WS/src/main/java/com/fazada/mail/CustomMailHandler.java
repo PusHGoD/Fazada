@@ -55,9 +55,9 @@ public class CustomMailHandler {
 
 				// Fill the message
 				messageBodyPart.setText(
-						"You has been assigned new account on Fazada by the administrator.<br/>Your username is: "
+						"Hi user,<br/><br/>You has been assigned new account on Fazada by the administrator.<br/><br/>Your username is: "
 								+ username + "<br/>" + "Your password is: " + password
-								+ "<br/>Please click this link to login to Fazada and change password:<br/> <a href='http://localhost:8080/fazada/main'>Fazada home page</a><br/><br/>Best regards,<br/><br/>Fazada team",
+								+ "<br/><br/>Please click this link to login to Fazada and change password:<br/> <a href='http://localhost:8080/fazada/main'>Fazada home page</a><br/><br/>Best regards,<br/><br/>Fazada team",
 						"UTF-8", "html");
 
 				// Create a multipar message

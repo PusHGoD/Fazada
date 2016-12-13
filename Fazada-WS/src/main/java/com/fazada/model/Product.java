@@ -109,15 +109,4 @@ public class Product implements java.io.Serializable {
 	public void setImg(String img) {
 		this.img = img;
 	}
-
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
-	@JsonManagedReference(value = "orderdetails-product")
-	public Set<Orderdetail> getOrderdetails() {
-		return this.orderdetails;
-	}
-
-	public void setOrderdetails(Set<Orderdetail> orderdetails) {
-		this.orderdetails = orderdetails;
-	}
-
 }

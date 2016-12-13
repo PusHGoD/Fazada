@@ -7,9 +7,13 @@ import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventHandler;
 
 import org.hibernate.HibernateException;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -120,7 +124,6 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/list/user/time", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public String getOrderListByUserAndTimeRange(@RequestBody String strJSON) throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
 		JSONObject json = new JSONObject(strJSON);
 		String userName = json.getString("userName");
 		Date date1 = null, date2 = null;
@@ -130,6 +133,7 @@ public class OrderController {
 		} catch (ParseException e) {
 			return "";
 		}
+		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(service.getOrderListByUserAndTimeRange(userName, date1, date2));
 	}
 
@@ -139,16 +143,20 @@ public class OrderController {
 	 * @throws JsonProcessingException
 	 */
 	@RequestMapping(value = "/update/status", method = RequestMethod.POST)
-	public ResponseEntity<String> updateStatus(@RequestBody String strJSON) throws JsonProcessingException {
-		JSONObject json = new JSONObject(strJSON);
-		Integer id = json.getInt("orderId");
-		Integer status = json.getInt("orderStatus");
-		if (id != null && status != null) {
-			boolean result = service.updateStatusById(id, status);
-			if (result) {
-				return new ResponseEntity<>("Status updated!", HttpStatus.OK);
-			} else
-				return new ResponseEntity<>("Error in updating status!", HttpStatus.INTERNAL_SERVER_ERROR);
+	public ResponseEntity<String> updateStatus(@RequestBody String strJSON) {
+		try {
+			JSONObject json = new JSONObject(strJSON);
+			Integer id = json.getInt("orderId");
+			Integer status = json.getInt("orderStatus");
+			if (id != null && status != null) {
+				boolean result = service.updateStatusById(id, status);
+				if (result) {
+					return new ResponseEntity<>("Status updated!", HttpStatus.OK);
+				} else
+					return new ResponseEntity<>("Error in updating status!", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (JSONException e) {
+			return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
 	}
@@ -158,11 +166,11 @@ public class OrderController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/import/json", method = RequestMethod.POST, consumes = { "application/json" })
+	@RequestMapping(value = "/import/json", method = RequestMethod.POST)
 	public ResponseEntity<String> importOrderByJSON(@RequestBody Order order) {
 		try {
 			if (order != null) {
-				if (service.getOrderByNumber(order.getOrderId()) != null) {
+				if (!service.getOrderByNumber(order.getOrderId()).isEmpty()) {
 					return new ResponseEntity<>("Order id is existed!", HttpStatus.BAD_REQUEST);
 				}
 				boolean result = service.addOrder(order);
@@ -182,12 +190,18 @@ public class OrderController {
 	public ResponseEntity<String> importOrderByXML(@RequestBody String message) throws JAXBException {
 		File file = new File(message);
 		if (file.exists()) {
-			JAXBContext context = JAXBContext.newInstance(Order.class);
-			Unmarshaller un = context.createUnmarshaller();
-			Order order = (Order) un.unmarshal(file);
 			try {
+				JAXBContext context = JAXBContext.newInstance(Order.class);
+				Unmarshaller un = context.createUnmarshaller();
+				un.setEventHandler(new ValidationEventHandler() {
+		            @Override
+		            public boolean handleEvent(ValidationEvent event) {
+		                return false;
+		            }
+		        });
+				Order order = (Order) un.unmarshal(file);
 				if (order != null) {
-					if (service.getOrderByNumber(order.getOrderId()) != null) {
+					if (!service.getOrderByNumber(order.getOrderId()).isEmpty()) {
 						return new ResponseEntity<>("Order id is existed!", HttpStatus.BAD_REQUEST);
 					}
 					boolean result = service.addOrder(order);
@@ -198,7 +212,7 @@ public class OrderController {
 				} else {
 					return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
 				}
-			} catch (HibernateException | DataIntegrityViolationException e) {
+			} catch (HibernateException | DataIntegrityViolationException | UnmarshalException e) {
 				return new ResponseEntity<>("Input is not valid!", HttpStatus.BAD_REQUEST);
 			}
 		}

@@ -58,7 +58,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Order> getOrderByNumber(Integer orderId) {
 		Session session = sessionFactory.getCurrentSession();
-		Query<Order> query = session.createQuery("from Order o where o.id =orderid");
+		Query<Order> query = session.createQuery("from Order o where o.orderId = :orderid");
 		query.setParameter("orderid", orderId);
 		return query.getResultList();
 	}
@@ -69,7 +69,7 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 	public List<Order> getOrderListByUserOrNumber(String searchValue) {
 		Session session = sessionFactory.getCurrentSession();
 		Query<Order> query = session.createQuery(
-				"select o from Order o INNER JOIN o.account as a where str(o.id) like :orderid OR a.userName like :userName");
+				"select o from Order o INNER JOIN o.account as a where str(o.orderId) like :orderid OR a.userName like :userName");
 		query.setParameter("orderid", "%" + searchValue + "%");
 		query.setParameter("userName", "%" + searchValue + "%");
 		return query.getResultList();
@@ -107,7 +107,9 @@ public class OrderDAOImpl extends GenericDAOImpl<Integer, Order> implements Orde
 			return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.fazada.dao.OrderDAO#addOrder(com.fazada.model.Order)
 	 */
 	@Override

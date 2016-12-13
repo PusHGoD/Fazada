@@ -17,6 +17,7 @@ public class ProductDAOImpl extends GenericDAOImpl<Integer, Product> implements 
 	 * 
 	 * @see com.fazada.dao.ProductDAO#getProductList()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<Product> getProductList() {
