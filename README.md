@@ -1,2 +1,2 @@
-# DemoSpring
-A spring demo for study.
+# Fazada
+A demo for internships.
