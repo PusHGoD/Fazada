@@ -295,6 +295,14 @@ $(function() {
 		}
 	});
 
+	$("#buy-btn").click(function() {
+		addToCart();
+	});
+	
+	$("#checkout-btn").click(function() {
+		checkOut();
+	});
+	
 	$(".submenu").click(function() {
 		$("#submenu").find(".submenu").removeClass("active");
 		$(this).addClass("active");

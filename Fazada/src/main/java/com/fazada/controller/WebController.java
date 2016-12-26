@@ -158,4 +158,10 @@ public class WebController {
 		// Redirect to home page
 		return "product";
 	}
+	
+	@RequestMapping(value = "/checkout", method = RequestMethod.GET)
+	public String getCheckoutPage() {
+		// Redirect to home page
+		return "checkout";
+	}
 }
