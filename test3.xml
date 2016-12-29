@@ -1,0 +1,16 @@
+<order>
+<orderId>12</orderId>
+<account>
+<id>5</id>
+</account>
+<dateTime>2015-12-04</dateTime>
+<total>460</total>
+<orderstatus>1</orderstatus>
+<orderdetail>
+<id>
+<orderId>12</orderId>
+<productId>5</productId>
+</id>
+<quantity>2</quantity>
+</orderdetail>
+</order>
